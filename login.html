@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Open Collective</title>
+  <meta name="description" content="Sign in to Open Collective. Choose from email, Nostr extension, or bunker authentication.">
+  <meta property="og:title" content="Login - Open Collective">
+  <meta property="og:description" content="Sign in to Open Collective. Choose from email, Nostr extension, or bunker authentication.">
+  <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg">
+  <link rel="stylesheet" type="text/css" href="/styles/global.css">
+  <link rel="stylesheet" type="text/css" href="/styles/login.css">
+</head>
+<body>
+  <div class="flex items-center justify-center login-container">
+    <div class="login-card grid gap-lg">
+      <div class="login-header">
+        <img src="/images/opencollective.svg" alt="Open Letter" class="brand-logo">
+        <h1 class="title">Welcome to <span class="brand-text">Open-Collective</span></h1>
+        <p>Choose your authentication method</p>
+      </div>
+
+      <div class="login-options grid gap-lg">
+        <!-- Email Authentication -->
+        <div class="grid gap-sm">
+          <h2 class="auth-title">Email Authentication</h2>
+          <p class="auth-text">Authenticate using your email address by Openbunker</p>
+        </div>
+        
+        <form id="email-form" class="email-form">
+          <input type="email" id="email-input" placeholder="Enter your email address" required>
+          <div class="button-container">
+            <button class="btn-primary" type="submit" id="send-code-btn">
+              <span class="btn-text">Send Verification Code</span>
+              <div class="spinner hidden"></div>
+            </button>
+            <span class="button-info" title="OpenBunker lets you sign using your email. In the background it connects you to Nostr, an open internet protocol that works a bit like email but for public messages and digital signatures.
+Instead of storing your data on one central server, Nostr spreads it across many independent servers so no single company owns or controls it.
+Your key is managed by OpenBunker, so you can use Nostr without needing technical knowledge.
+You can later withdraw a signature, but both the signature and the withdrawal remain visible as open data for transparency.">
+            ?
+            </span>
+          </div>
+          
+        </form>
+
+        <form id="verify-form" class="verify-form hidden">
+          <div class="success-message message">
+            <span>✓ Code sent to <span id="sent-email"></span></span>
+          </div>
+          <input type="text" id="code-input" placeholder="123456" maxlength="6" required>
+          <div class="flex gap-lg">
+            <button class="btn-secondary flex-grow" type="button" id="reset-btn">Start Over</button>
+            <button class="btn-primary flex-grow" type="submit" id="verify-btn" disabled>
+              <span class="btn-text">Verify Code</span>
+              <div class="spinner hidden"></div>
+            </button>
+          </div>
+        </form>
+
+        <div class="or-divider">or</div>
+
+        <!-- Existing Login Methods -->
+        <div class="other-logins grid gap-lg">
+          <div class="button-container">
+            <button id="nostr-login-btn">Login with Nostr Extension</button>
+            <span class="button-info" title="Nostr is an open internet protocol that lets you have your own digital identity across different websites, without needing an account on a single platform.
+If you use a browser extension, it signs messages directly from your device instead of using an email or a service like OpenBunker.
+You fully own your key and identity, but you are also responsible for keeping your key private and secure.
+If someone else gets your key, your identity can no longer be trusted or recovered.">?</span>
+          </div>
+          <input type="text" id="nsec-input" class="hidden" placeholder="Input nsec bunker url">
+          <div class="button-container">
+            <button id="bunker-login-btn">Login with Bunker</button>
+            <span class="button-info" title="Nostr is an open internet protocol where your identity is verified by digital signatures instead of passwords or accounts.
+A Nostr bunker is a secure online vault that keeps your signing key safe and can sign messages for you when you give permission.
+You can connect your bunker to different Nostr apps and services, including Open Letter.">?</span>
+          </div>
+        </div>
+        
+        <div id="create-acc-info" class="create-account ">
+          <p>Nostr extension not found, please install</p>
+          <p>Don't have any account yet? 
+            <a href="https://nstart.me/en?an=Opencollective&at=web&aa=134ECD&ac=https://opencollective.earth">
+              Create
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div id="message-display" class="message hidden"></div>
+
+      <a href="/" class="back-link" onclick="history.back()">🡠 Go back</a>
+    </div>
+  </div>
+
+  <script src="/scripts/connect-relays.js"></script>
+  <script src="/scripts/email-auth.js" type="module"></script>
+  <script src="/scripts/login-page.js" type="module"></script>
+</body>
+</html>

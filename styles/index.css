@@ -1,0 +1,149 @@
+/* Heading part */
+.heading-intro {
+  color: var(--black-color-2)
+}
+.proposal-btn-lg-container {
+  padding: var(--space-lg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+}
+.proposal-btn-lg {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm);
+  border-radius: 12px;
+  background-color: var(--white-color-2);
+  color: var(--black-color-2);
+  cursor: pointer;
+}
+.proposal-btn-lg-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-grow: 1;
+}
+.proposal-btn-lg img {
+  width: 32px;
+  height: 32px;
+  border-radius: 99px;
+}
+.proposal-btn-lg-icon {
+  width: 30px;
+  height: 30px;
+  font-size: var(--text-3xl);
+  line-height: 70%;
+  text-align: center;
+  border-radius: 12px;
+  background-color: var(--white-color-3);
+  color: var(--black-color-2);
+  flex: none;
+}
+/* -------- */
+
+.proposal-card {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-2lg);
+  color: var(--black-color-2);
+  background-color: var(--white-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  cursor: pointer;
+}
+.proposal-card:hover {
+  box-shadow: var(--shadow);
+}
+.proposal-card-no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: var(--space-lg);
+  padding: var(--space-2xl);
+  text-align: center;
+  color: var(--black-color-3);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+.user-image {
+  width: clamp(2.188rem, 1.875rem + 0.781vw, 2.5rem) /* 35px to 40px */;
+  height: clamp(2.188rem, 1.875rem + 0.781vw, 2.5rem) /* 35px to 40px */;
+  border-radius: 99px;
+  flex: none;
+  overflow: hidden;
+  background: var(--white-color-2);
+}
+.user-name {
+  font-weight: 500;
+}
+.proposal-card-content-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+}
+.proposal-card-date {
+  font-size: var(--text-sm);
+  color: var(--black-color-4);
+}
+.proposal-card h3 {
+  color: var(--black-color);
+}
+.proposal-card-intro {
+  font-size: var(--text-sm);
+}
+.proposal-card h3, .proposal-card-intro  {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  word-break: break-all;
+}
+.reaction-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  user-select: none;
+  cursor: pointer;
+}
+.reaction-item .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--text-xl);
+  height: var(--text-3xl);
+}
+.reaction-item .icon svg {
+  width: var(--text-xl);
+  height: var(--text-xl);
+}
+.reaction-item .icon.active {
+  width: var(--text-3xl);
+  background-color: var(--white-color-2);
+  padding: 4px;
+  border-radius: var(--border-radius);
+}
+.proposal-order-id {
+  font-weight: 500;
+  color: var(--black-color-4);
+}
+.proposal-card.loader {
+  background: transparent;
+}
+.proposal-card.loader:hover {
+  box-shadow: none;
+  cursor: default;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

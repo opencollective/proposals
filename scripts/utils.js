@@ -1,0 +1,88 @@
+export const setButtonLoading = (button, loading) => {
+  if (loading) {
+    button.disabled = true;
+    button.dataset.originalHTML = button.innerHTML;
+    button.innerHTML =
+      `<div class="flex justify-center items-center">
+        <svg class="spinner btn-spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+          <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+        </svg>
+      </div>`;
+  } else {
+    button.disabled = false;
+    button.innerHTML = button.dataset.originalHTML || button.innerHTML;
+  }
+};
+
+export const formatDate = (t) => {
+  if (!t) return "";
+  const date = new Date(t * 1000),
+    days = Math.floor((Date.now() - date.getTime()) / 86400000),
+    months = Math.floor(days / 30);
+  
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 30) return `${days} days ago`;
+  if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+},
+  formatFullDate = (t) => 
+    t ? new Date(t * 1000).toLocaleString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }) : "",
+  setupDateFormatting = (container = document) => {
+    container.querySelectorAll('[data-timestamp]').forEach(el => {
+      if (el.dataset.dateFormatted) return;
+      const ts = el.dataset.timestamp;
+      el.textContent = formatDate(ts);
+      el.dataset.dateFormatted = 'true';
+      el.addEventListener('mouseenter', () => el.textContent = formatFullDate(ts));
+      el.addEventListener('mouseleave', () => el.textContent = formatDate(ts));
+    });
+  },
+  getFromLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || null,
+  getTag = (tags, tagName) => tags?.find((t) => t[0] === tagName)?.[1],
+  generateUId = (event) => {
+    const { kind, pubkey, tags } = event,
+      dTag = getTag(tags, "d");
+    return dTag ? `${kind}:${pubkey}:${dTag}` : null;
+  },
+  linkifyNostr = (text) => {
+    return text.replace(/nostr:([a-z0-9]+)/gi, (_, eventId) => {
+      try {
+        const { type, data } = NostrTools.nip19.decode(eventId),
+          label = type === 'note' ? 'Note' : type === 'npub' ? 'Profile' : 'Event',
+          href =
+            type === 'note'
+              ? `https://njump.me/${data}`
+              : type === 'npub'
+              ? `/${eventId}`
+              : data?.kind === 39700 || data?.kind === 39701
+              ? `/${eventId}`
+              : `https://njump.me/${eventId}`;
+        return `<a href="${href}">${label}</a>`;
+      } catch {
+        return `nostr:${eventId}`;
+      }
+    })
+  },
+  normalizeReaction = (content) => {
+    const trimmed = content.trim();
+    if (/^\p{Emoji}$/u.test(trimmed)) return trimmed;
+    const map = {
+      '+': '❤️',
+      'heart': '❤️',
+      'love': '❤️',
+      '-': '👎',
+      'dislike': '👎',
+      'like': '👍',
+      'fire': '🔥',
+    };
+    return map[trimmed.toLowerCase()] || trimmed;
+  };

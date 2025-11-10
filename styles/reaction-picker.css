@@ -1,0 +1,53 @@
+.reaction-picker {
+  position: fixed;
+  display: flex;
+  gap: var(--space-md);
+  background: var(--white-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-sm);
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  animation: scaleIn 0.15s ease-out;
+  border-radius: var(--border-radius);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.reaction-btn {
+  font-size: var(--text-xl);
+  padding: var(--space-sm);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: transform 0.1s ease, background 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--text-3xl);
+  height: var(--text-3xl);
+}
+
+.reaction-btn:hover {
+  background: var(--white-color-2);
+  transform: scale(1.2);
+}
+
+.reaction-item.reactions .icon {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.reaction-item.reactions .icon:hover {
+  transform: scale(1.1);
+}

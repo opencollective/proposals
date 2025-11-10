@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - Open Collective</title>
+    <meta name="description" content="View user profile and their Open Collective proposals" />
+    <meta property="og:title" content="Profile - Open Collective" />
+    <meta property="og:description" content="View user profile and their Open Collective proposals" />
+    <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg" />
+    <link rel="stylesheet" type="text/css" href="/styles/global.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/index.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div>
+        <header>
+          <div class="header-navigation py-md">
+            <div class="breadcrumb-nav">
+              <div class="breadcrumb-item back-btn" onclick="history.back()">🡠</div>
+              <div class="breadcrumb-item"><a href="/">Home</a></div>
+              <div class="breadcrumb-item separator">/</div>
+              <span class="breadcrumb-item current">Profile</span>
+            </div>
+            <div class="login-content flex gap-lg">
+              <div id="btn-login" class="btn btn-primary">
+                Connect your digital identity
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="container grid gap-lg">
+
+          <div class="grid gap-lg py-lg">
+            <div class="grid gap-xs">
+              <div class="flex gap-lg user-profile">
+                <img class="user-image flex-none" src="https://robohash.org/1.png" alt="avatar">
+                <h1 class="title user-name">Annonymous</h1>
+              </div>
+              <p class="heading-intro">Proposals by this user</p>
+            </div>
+            
+            <div class="proposal-btn-lg-container hidden">
+              <a href="/create" class="proposal-btn-lg">
+                <div class="proposal-btn-lg-content">
+                  <img class="user-name" src="https://robohash.org/1.png" alt="avatar">
+                  <div>Make a new proposal</div>
+                </div>
+                <div class="proposal-btn-lg-icon">+</div>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="grid gap-xs">
+            <div class="grid gap-xxs" id="fetched-proposals">
+              <div class="proposal-card loader flex items-center justify-center" data-created-at="0">
+                <div class="spinner">
+                  <svg class="spinning-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="#99cfff" fill-rule="evenodd" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+                    <path fill="#1f87ff" fill-rule="evenodd" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center py-lg" id="fetched-text"></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="container content-container">
+        <div>© <script>document.write(new Date().getFullYear())</script> Open Collective</div>
+      </footer>
+    </div>
+    <script src="/scripts/connect-relays.js"></script>
+    <script src="/scripts/login.js" type="module"></script>
+    <script src="/scripts/profile.js" type="module"></script>
+  </body>
+</html>
