@@ -1,6 +1,7 @@
 import * as NostrTools from "./nostr-tools.bundle.mjs";
 import { getFromLocalStorage, updateCreateButton } from "./utils.js";
 import { browse } from "./browse.js";
+import { updateProfile } from "./update-profile.js";
 
 // Get npub from URL
 const query = document.querySelector.bind(document),
@@ -26,15 +27,18 @@ if (!profilePubkey) {
 const userInfo = getFromLocalStorage("userInfo"),
   isOwner = userInfo?.pubkey === profilePubkey;
 
-// Update create button if viewing own profile based on login status
-if (isOwner) {
-  updateCreateButton();
-}
+// Update profile elements if viewing own profile based on login status
+const updateOwnProfile = () => {
+  if (isOwner) {
+    updateCreateButton();
+    updateProfile(profilePubkey, true);
+  }
+};
+
+updateOwnProfile();
 
 // Listen for user info updates
-window.addEventListener('userInfoUpdated', () => {
-  if (!userInfo) location.reload();
-});
+window.addEventListener('userInfoUpdated', updateOwnProfile);
 
 // Set up profile-specific filters
 const filters = {
