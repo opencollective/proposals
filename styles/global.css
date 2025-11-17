@@ -334,8 +334,15 @@ button:disabled {
   margin-right: auto;
 }
 .breadcrumb-item.back-btn {
+  display: flex;
+  align-items: center;
   margin-right: 10px;
   cursor: pointer;
+}
+.breadcrumb-item.back-btn .arrow-icon {
+  flex: none;
+  width: fit-content;
+  height: 20px;
 }
 .breadcrumb-item, .breadcrumb-item a {
   font-size: var(--text-lg);
