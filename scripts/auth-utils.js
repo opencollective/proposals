@@ -74,6 +74,7 @@ export const handleUserEvent = ([type, , event]) => {
       const profileData = JSON.parse(content);
       Object.assign(userInfo, profileData, { created_at });
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      window.dispatchEvent(new CustomEvent('userInfoUpdated'));
     } catch (err) {
       console.error("Error parsing user profile:", err);
     }

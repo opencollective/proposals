@@ -22,10 +22,10 @@ const checkLogin = () => {
     imgUrl = picture || defaultPic;
 
   document.querySelector(".login-content").innerHTML =
-    `<div class="user-profile-info" data-pubkey="${pubkey}">
+    `<div class="user-profile-info" data-pubkey="${pubkey}" data.profileCreated_at="">
       <a href="/${npub}" class="profile">
-        <img src="${imgUrl}" onerror="this.src='${defaultPic}'" alt="User avatar" />
-        <div class="  ">${userName}</div>
+        <img class="user-image" src="${imgUrl}" onerror="this.src='${defaultPic}'" alt="User avatar" />
+        <div class="user-name">${userName}</div>
       </a>
       <div id="btn-logout">Log out</div>
     </div>`;
@@ -56,6 +56,8 @@ btnLogin && (
 );
 
 checkLogin(); // Check if user is logged in on page load
+
+window.addEventListener('userInfoUpdated', checkLogin);
 
 // This code is needed to restore the bunker signer authentication state from localStorage
 // It allows users to maintain their authenticated session with the bunker service
