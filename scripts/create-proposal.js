@@ -9,6 +9,34 @@ const form = document.getElementById("create-proposal"),
   userInfo = getFromLocalStorage("userInfo"),
   editProposal = JSON.parse(localStorage.getItem('editProposal') || 'null');
 
+// Check if user is logged in, hide form and show login prompt if not
+if (!userInfo) {
+  form.classList.add('hidden');
+  form.parentElement.insertAdjacentHTML('beforeend', `
+    <div class="proposal-card-no-data">
+      <div class="markdown">
+        <h2>Login Required</h2>
+        <p>You need to connect your digital identity to create proposals</p>
+      </div>
+      <button
+        class="btn btn-primary"
+        onclick="document.getElementById('btn-login').click()"
+      >
+        Connect your digital identity
+      </button>
+    </div>
+  `);
+  
+  // Show form when user logs in
+  window.addEventListener('userInfoUpdated', () => {
+    const newUserInfo = getFromLocalStorage("userInfo");
+    if (newUserInfo) {
+      form.classList.remove('hidden');
+      document.querySelector('.proposal-card-no-data')?.remove();
+    }
+  });
+}
+
 // Prefill if editing
 if (editProposal) {
   const { content, tags } = editProposal,
