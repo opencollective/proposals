@@ -1,5 +1,5 @@
 import * as NostrTools from "./nostr-tools.bundle.mjs";
-import { getFromLocalStorage } from "./utils.js";
+import { getFromLocalStorage, updateCreateButton } from "./utils.js";
 import { browse } from "./browse.js";
 
 // Get npub from URL
@@ -26,19 +26,10 @@ if (!profilePubkey) {
 const userInfo = getFromLocalStorage("userInfo"),
   isOwner = userInfo?.pubkey === profilePubkey;
 
-// Update create proposal button based on login status
-const updateCreateButton = () => {
-  if (isOwner && userInfo?.pubkey) {
-    query(".proposal-btn-lg-container").classList.remove("hidden");
-    const proposalBtn = query(".proposal-btn-lg"),
-      img = proposalBtn?.querySelector("img");
-      
-    if (proposalBtn) proposalBtn.setAttribute("data-pubkey", userInfo.pubkey);
-    if (img && userInfo.picture) img.src = userInfo.picture;
-  }
-};
-
-updateCreateButton(); // Update create button if viewing own profile
+// Update create button if viewing own profile based on login status
+if (isOwner) {
+  updateCreateButton();
+}
 
 // Listen for user info updates
 window.addEventListener('userInfoUpdated', () => {
