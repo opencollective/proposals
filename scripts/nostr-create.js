@@ -35,8 +35,8 @@ async function createBunkerSign(event) {
 // Create and send event
 const create = async (kind, content, tags, handleEvent, onSuccess, onError) => {
   try {
-    if (!window.nostr) {
-      const error = new Error("Connect Nostr extension first");
+    if (!window.nostr && !userInfo?.bunkerSigner) {
+      const error = new Error("Please connect your nostr profile first");
       if (onError) onError(error);
       else alert(error.message);
       return;
