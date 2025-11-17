@@ -36,20 +36,6 @@
 .auth-text {
   color: var(--black-color-4);
 }
-.or-divider {
-  font-size: var(--text-lg);
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  color: var(--black-color-3);
-  margin: var(--space-lg) 0;
-}
-.or-divider::before, .or-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: var(--gray-color);
-}
 .email-form, .verify-form {
   display: flex;
   flex-direction: column;
@@ -133,8 +119,13 @@
 .back-link {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-xs);
   color: var(--black-color-2);
   font-weight: 500;
+}
+.back-link .arrow-icon {
+  width: 16px;
+  height: 16px;
 }
 .spinner {
   width: var(--text-lg);
@@ -161,4 +152,30 @@
   border-radius: var(--border-radius);
   font-size: var(--text-sm);
   color: var(--black-color-3);
+}
+
+.advanced-toggle-container {
+  text-align: center;
+  margin: var(--space-md) 0;
+}
+
+.advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--black-color-3);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.advanced-toggle.expanded .arrow-icon {
+  transform: rotate(180deg);
 }

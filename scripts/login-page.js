@@ -31,10 +31,20 @@ const emailForm = id("email-form"),
   messageDisplay = id("message-display");
 
 // Other login methods
-const nostrLoginBtn = id("nostr-login-btn"),
+const advancedToggle = id("advanced-toggle"),
+  otherLoginMethods = id("other-login-methods"),
+  nostrLoginBtn = id("nostr-login-btn"),
   bunkerLoginBtn = id("bunker-login-btn"),
   nsecInput = id("nsec-input"),
   createAccInfo = id("create-acc-info");
+
+// Advanced toggle handler
+advancedToggle.onclick = () => {
+  otherLoginMethods.classList.toggle("hidden");
+  advancedToggle.classList.toggle("expanded");
+  const span = advancedToggle.querySelector("span");
+  span.textContent = otherLoginMethods.classList.contains("hidden") ? "Advanced" : "Hide Advanced";
+};
 
 // Utility functions
 const showMessage = (text, type = "error") => {

@@ -58,33 +58,43 @@ You can later withdraw a signature, but both the signature and the withdrawal re
           </div>
         </form>
 
-        <div class="or-divider">or</div>
-
-        <!-- Existing Login Methods -->
-        <div class="other-logins grid gap-lg">
-          <div class="button-container">
-            <button id="nostr-login-btn">Login with Nostr Extension</button>
-            <span class="button-info" title="Nostr is an open internet protocol that lets you have your own digital identity across different websites, without needing an account on a single platform.
-If you use a browser extension, it signs messages directly from your device instead of using an email or a service like OpenBunker.
-You fully own your key and identity, but you are also responsible for keeping your key private and secure.
-If someone else gets your key, your identity can no longer be trusted or recovered.">?</span>
-          </div>
-          <input type="text" id="nsec-input" class="hidden" placeholder="Input nsec bunker url">
-          <div class="button-container">
-            <button id="bunker-login-btn">Login with Bunker</button>
-            <span class="button-info" title="Nostr is an open internet protocol where your identity is verified by digital signatures instead of passwords or accounts.
-A Nostr bunker is a secure online vault that keeps your signing key safe and can sign messages for you when you give permission.
-You can connect your bunker to different Nostr apps and services, including Open Letter.">?</span>
+        <!-- Advanced Toggle -->
+        <div class="advanced-toggle-container">
+          <div id="advanced-toggle" class="advanced-toggle">
+            <span>Advanced</span>
+            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
         </div>
-        
-        <div id="create-acc-info" class="create-account ">
-          <p>Nostr extension not found, please install</p>
-          <p>Don't have any account yet? 
-            <a href="https://nstart.me/en?an=Opencollective&at=web&aa=134ECD&ac=https://opencollective.earth">
-              Create
-            </a>
-          </p>
+
+        <!-- Other Login Methods -->
+        <div id="other-login-methods" class="grid gap-lg hidden">
+          <div class="other-logins grid gap-lg">
+            <div class="button-container">
+              <button id="nostr-login-btn">Login with Nostr Extension</button>
+              <span class="button-info" title="Nostr is an open internet protocol that lets you have your own digital identity across different websites, without needing an account on a single platform.
+  If you use a browser extension, it signs messages directly from your device instead of using an email or a service like OpenBunker.
+  You fully own your key and identity, but you are also responsible for keeping your key private and secure.
+  If someone else gets your key, your identity can no longer be trusted or recovered.">?</span>
+            </div>
+            <input type="text" id="nsec-input" class="hidden" placeholder="Input nsec bunker url">
+            <div class="button-container">
+              <button id="bunker-login-btn">Login with Bunker</button>
+              <span class="button-info" title="Nostr is an open internet protocol where your identity is verified by digital signatures instead of passwords or accounts.
+  A Nostr bunker is a secure online vault that keeps your signing key safe and can sign messages for you when you give permission.
+  You can connect your bunker to different Nostr apps and services, including Open Letter.">?</span>
+            </div>
+          </div>
+          
+          <div id="create-acc-info" class="create-account ">
+            <p>Nostr extension not found, please install</p>
+            <p>Don't have any account yet? 
+              <a href="https://nstart.me/en?an=Opencollective&at=web&aa=134ECD&ac=https://opencollective.earth">
+                Create
+              </a>
+            </p>
+          </div>
         </div>
       </div>
 
