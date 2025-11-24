@@ -27,7 +27,9 @@ export const browse = (options = {}) => {
       fetchProfileFirst = null
     } = options,
     pathname = window.location.pathname.slice(1),
-    isNpubUrl = pathname.startsWith("npub");
+    isNpubUrl = pathname.startsWith("npub"),
+    group = getFromLocalStorage('group'),
+    groupUid = group ? generateUId(group) : null;
 
   let oldestTime = null;
   let newCount = 0;
@@ -148,6 +150,7 @@ export const browse = (options = {}) => {
     
     const query = { ...filters };
     if (oldestTime) query.until = oldestTime;
+    if (groupUid) query['#A'] = [groupUid];
     
     fetchProposals(null, handleEvent, query);
   };
