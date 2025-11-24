@@ -126,4 +126,29 @@ export const formatDate = (t) => {
     });
     observer.observe(target);
   };
+
+export const showSelectedGroup = () => {
+  const group = getFromLocalStorage('group');
+  if (!group) location.href = '/groups';
+
+  const groupEl = document.getElementById('selected-group');
+  if (!groupEl || !generateUId(group)) return;
+  
+  const name = getTag(group.tags, 'name') || getTag(group.tags, 'd') || 'Unnamed group',
+    image = getTag(group.tags, 'image');
+  
+  groupEl.classList.remove('hidden');
+  groupEl.innerHTML = `
+    <div class="flex items-center justify-between gap-lg">
+      <div class="flex items-center gap-md">
+        <img
+          src="${image}"
+          alt="${name}"
+          onerror="this.src='/images/people.svg'"
+        >
+        <div class="group-name">${name}</div>
+      </div>
+      <a href="/groups" class="btn btn-sm btn-white-2">Change group</a>
+    </div>
+  `;
 };

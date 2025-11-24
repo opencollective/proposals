@@ -2,6 +2,16 @@
 .heading-intro {
   color: var(--black-color-2)
 }
+#selected-group {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+#selected-group img {
+  width: clamp(1.563rem, 0.313rem + 3.125vw, 2.813rem);
+  height: clamp(1.563rem, 0.313rem + 3.125vw, 2.813rem);
+  border-radius: var(--border-radius);
+}
 .proposal-btn-lg-container {
   padding: var(--space-lg);
   border: 1px solid var(--border-color);

@@ -1,4 +1,4 @@
-import { getFromLocalStorage, updateCreateButton } from "./utils.js";
+import { getFromLocalStorage, updateCreateButton, showSelectedGroup } from "./utils.js";
 import { browse } from "./browse.js";
 
 const userInfo = getFromLocalStorage("userInfo");
@@ -9,6 +9,7 @@ if (userInfo?.pubkey) updateCreateButton();
 // Listen for user info updates
 window.addEventListener('userInfoUpdated', updateCreateButton);
 
-// Browse proposals
+showSelectedGroup();
+
 const browser = browse();
 browser.load();

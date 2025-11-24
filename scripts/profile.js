@@ -1,5 +1,5 @@
 import * as NostrTools from "./nostr-tools.bundle.mjs";
-import { getFromLocalStorage, updateCreateButton } from "./utils.js";
+import { getFromLocalStorage, updateCreateButton, showSelectedGroup } from "./utils.js";
 import { browse } from "./browse.js";
 import { updateProfile } from "./update-profile.js";
 
@@ -39,6 +39,9 @@ updateOwnProfile();
 
 // Listen for user info updates
 window.addEventListener('userInfoUpdated', updateOwnProfile);
+
+// Show selected group
+showSelectedGroup();
 
 // Set up profile-specific filters
 const filters = {
