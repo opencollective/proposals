@@ -1,4 +1,4 @@
-import { getTag, generateUId, getFromLocalStorage } from "./utils.js";
+import { getTag, generateUId, getFromLocalStorage, setupScrollObserver } from "./utils.js";
 import { fetchProposals, fetchRelated, fetchProfile } from "./nostr-fetch.js";
 import { attachRelatedKind } from "./attach-related.js";
 import { updateProfile } from "./update-profile.js";
@@ -102,6 +102,7 @@ export const browse = (options = {}) => {
     [...window.proposalsCache.values()]
       .sort((a, b) => b.created_at - a.created_at)
       .forEach((event) => displayProposal(event, container));
+    setupScrollObserver(container, '.proposal-card', loadProposals);
   };
 
   const checkComplete = () => {
@@ -135,6 +136,8 @@ export const browse = (options = {}) => {
       }
     } else if (newCount < 10) {
       loadProposals();
+    } else {
+      setupScrollObserver(container, '.proposal-card', loadProposals);
     }
   };
 

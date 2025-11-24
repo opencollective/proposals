@@ -17,16 +17,16 @@ export const setButtonLoading = (button, loading) => {
 
 export const formatDate = (t) => {
   if (!t) return "";
-  const date = new Date(t * 1000),
-    days = Math.floor((Date.now() - date.getTime()) / 86400000),
-    months = Math.floor(days / 30);
-  
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 30) return `${days} days ago`;
-  if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
-  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-},
+    const date = new Date(t * 1000),
+      days = Math.floor((Date.now() - date.getTime()) / 86400000),
+      months = Math.floor(days / 30);
+    
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 30) return `${days} days ago`;
+    if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  },
   formatFullDate = (t) => 
     t ? new Date(t * 1000).toLocaleString('en-GB', {
       day: 'numeric',
@@ -109,4 +109,21 @@ export const formatDate = (t) => {
         <div class="proposal-btn-lg-icon">+</div>
       </a>
     `;
+  },
+  setupScrollObserver = (container, selector, callback) => {
+    const cards = container?.querySelectorAll(selector);
+    if (!cards || cards.length < 10) return;
+    
+    const target = cards[cards.length - 10];
+    if (target.dataset.observed) return;
+    
+    target.dataset.observed = 'true';
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        callback();
+      }
+    });
+    observer.observe(target);
+  };
 };
