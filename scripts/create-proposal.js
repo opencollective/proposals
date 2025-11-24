@@ -1,4 +1,4 @@
-import { getFromLocalStorage, setButtonLoading } from "./utils.js";
+import { getFromLocalStorage, setButtonLoading, generateUId } from "./utils.js";
 import { createProposal, updateProposal, updateProposalWithKindChange } from "./nostr-create.js";
 import * as NostrTools from "./nostr-tools.bundle.mjs";
 
@@ -7,8 +7,22 @@ window.pendingEvents = window.pendingEvents || new Map();
 
 const form = document.getElementById("create-proposal"),
   userInfo = getFromLocalStorage("userInfo"),
-  editProposal = JSON.parse(localStorage.getItem('editProposal') || 'null');
+  editProposal = getFromLocalStorage('editProposal') || null;
 
+let group = getFromLocalStorage('group'),
+  groupChecked = false;
+
+const checkGroup = () => {
+  if (groupChecked) return;
+  groupChecked = true;
+  
+  group = getFromLocalStorage('group');
+  if (!group) {
+    alert('You need to select a group first');
+    location.href = '/groups';
+  }
+};
+  
 // Check if user is logged in, hide form and show login prompt if not
 if (!userInfo) {
   form.classList.add('hidden');
@@ -33,9 +47,13 @@ if (!userInfo) {
     if (newUserInfo) {
       form.classList.remove('hidden');
       document.querySelector('.proposal-card-no-data')?.remove();
+      setTimeout(checkGroup, 3000);
     }
   });
+} else {
+  setTimeout(checkGroup, 3000);
 }
+
 
 // Prefill if editing
 if (editProposal) {
@@ -79,6 +97,7 @@ const generateUniqueId = () => {
 let mainEvent = null;
 
 const handleEvent = ([type, eventId, data]) => {
+  console.log(type, eventId, data);
   if (type === "OK" && data) {
     const pendingEvent = window.pendingEvents.get(eventId);
     if (!pendingEvent) return;
@@ -110,6 +129,10 @@ const handleSubmit = async (kind, button) => {
 
   if (!title || !description) return alert("Title and description are required!");
 
+  const groupUid = generateUId(group),
+    groupKind = group.kind.toString(),
+    groupPubkey = group.pubkey;
+
   setButtonLoading(button, true);
 
   const onError = () => setButtonLoading(button, false);
@@ -120,6 +143,12 @@ const handleSubmit = async (kind, button) => {
       ["published_at", `${Math.floor(Date.now() / 1000)}`],
       ["title", title],
       ["z", generateUniqueOrder()],
+      ["A", groupUid],
+      ["P", groupPubkey],
+      ["K", groupKind],
+      ["a", groupUid],
+      ["p", groupPubkey],
+      ["k", groupKind],
       ["t", "proposal"],
       ["client", "Opencollective"],
     ];
