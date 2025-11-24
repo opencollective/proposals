@@ -4,6 +4,7 @@ import sendMessage from "./send-message.js";
 window.proposalSubId = null;
 window.profileSubId = null;
 window.relatedSubId = null;
+window.groupsSubId = null;
 window.isFetching = false;
 window.isPendingFetchkind0 = false;
 window.isPendingFetchRelatedkind = false;
@@ -67,4 +68,11 @@ export const fetchRelated = (uid, handleEvent) => {
     return;
   }
   fetchRelatedKinds(window.relatedKindsUIds, handleEvent); // Fetch all tracked UIDs
+};
+
+// Fetch groups (kind 34550) with pagination
+export const fetchGroups = (oldestTime, handleEvent, customFilters = {}) => {
+  const filters = { kinds: [34550], ...customFilters };
+  if (oldestTime) filters.until = oldestTime;
+  sub('groupsSubId', 'ocp-g', filters, handleEvent);
 };

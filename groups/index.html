@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groups - Proposals</title>
+    <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg" />
+    <link rel="stylesheet" type="text/css" href="/styles/global.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/groups.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div>
+        <header>
+          <div class="header-navigation py-md">
+            <div class="breadcrumb-nav">
+              <div class="breadcrumb-item back-btn" onclick="history.back()">
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="breadcrumb-item"><a href="/">Home</a></div>
+              <div class="breadcrumb-item separator">/</div>
+              <span class="breadcrumb-item current">Groups</span>
+            </div>
+
+            <div class="login-content flex gap-lg">
+              <div id="btn-login" class="btn btn-primary">
+                Connect your digital identity
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="container grid gap-lg">
+          <div class="grid gap-lg py-lg">
+            <div class="grid gap-xs">
+              <h1 class="title">Groups</h1>
+              <p class="heading-intro">Select and Browse community groups Proposals</p>
+            </div>
+          </div>
+
+          <div class="grid gap-xs">
+            <div class="groups-grid" id="groups-container">
+            </div>
+            <div class="flex items-center justify-center py-xl" id="state">
+              <div class="loader flex items-center justify-center">
+                <div class="spinner">
+                  <svg class="spinning-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+                    <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="container content-container">
+        <div>© <script>document.write(new Date().getFullYear())</script> Open Collective</div>
+      </footer>
+    </div>
+    <script src="/scripts/connect-relays.js"></script>
+    <script src="/scripts/groups.js" type="module"></script>
+    <script src="/scripts/login.js" type="module"></script>
+  </body>
+</html>
