@@ -23,9 +23,9 @@ const checkLogin = () => {
 
   document.querySelector(".login-content").innerHTML =
     `<div class="user-profile-info" data-pubkey="${pubkey}" data.profileCreated_at="">
-      <a href="/${npub}" class="profile">
+      <a href="/${npub}" class="profile" title="${userName}">
         <img class="user-image" src="${imgUrl}" onerror="this.src='${defaultPic}'" alt="User avatar" />
-        <div class="user-name">${userName}</div>
+        <div class="user-name profile-name">${userName}</div>
       </a>
       <div id="btn-logout">Log out</div>
     </div>`;
