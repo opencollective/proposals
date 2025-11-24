@@ -104,6 +104,22 @@
   font-weight: 500;
   color: var(--black-color-4);
 }
+#group-pill {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--white-color-2);
+  border-radius: var(--border-radius);
+  font-size: var(--text-sm);
+  line-height: 1;
+  align-items: center;
+}
+#group-pill img {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  object-fit: cover;
+}
 .comment-sign-container .sign-btn {
   padding: var(--space-sm) var(--space-xl);
 }

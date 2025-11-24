@@ -1,5 +1,5 @@
 import * as NostrTools from "./nostr-tools.bundle.mjs";
-import { fetchProposals, fetchProfile, fetchRelated } from "./nostr-fetch.js";
+import { fetchProposals, fetchProfile, fetchRelated, fetchGroups } from "./nostr-fetch.js";
 import { updateProfile } from "./update-profile.js";
 import { getFromLocalStorage, getTag, generateUId, setButtonLoading } from "./utils.js";
 import { attachRelatedKind } from "./attach-related.js";
@@ -67,7 +67,23 @@ const handleEvent = ([type, subId, data]) => {
         renderProposalPreview(proposal, id("proposal-preview"));
         getProfile(pubkey);
         getRelatedKinds(generateUId(proposal));
+        
+        // Fetch group from A tag
+        const aTag = getTag(tags, "A");
+        if (aTag) {
+          const [kind, author, d] = aTag.split(':');
+          if (kind === '34550' && author && d) {
+            fetchGroups(null, handleEvent, { authors: [author], '#d': [d], limit: 1 });
+          }
+        }
       }
+    }
+    
+    if (kind === 34550) {
+      const name = getTag(tags, 'name') || getTag(tags, 'd') || 'Group',
+        image = getTag(tags, 'image') || '/images/people.svg';
+      
+      window.dispatchEvent(new CustomEvent('groupReceived', { detail: { name, image } }));
     }
 
     if (kind === 0) {

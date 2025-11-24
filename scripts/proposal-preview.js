@@ -12,6 +12,7 @@ export const renderProposalPreview = (proposal, container) => {
     title = getTag(tags, "title"),
     orderUId = getTag(tags, "z"),
     publishedAt = getTag(tags, "published_at"),
+    aTag = getTag(tags, "A"),
     uid = generateUId(proposal),
     npub = NostrTools.nip19.npubEncode(pubkey);
 
@@ -35,10 +36,10 @@ export const renderProposalPreview = (proposal, container) => {
         <a href="/${npub}">
           <img class="user-image" src="https://robohash.org/${pubkey}.png?size=40x40">
         </a>
-        <div class="flex flex-col flex-grow text-sm">
+        <div class="flex flex-col flex-grow gap-xs text-sm">
           <a href="/${npub}" class="user-name">Anonymous</a>
           <div class="date-info-container flex justify-between items-center">
-            <div>
+            <div id="date-info-wrapper">
               <span data-timestamp="${publishedAt || created_at}" title="Published at">
                 ${publishedAt || created_at}
               </span>
@@ -121,6 +122,22 @@ export const renderProposalPreview = (proposal, container) => {
   // Setup click handlers
   setupProposalInteractions(container, proposal);
   setupDateFormatting(container);
+  
+  if (aTag) {
+    window.addEventListener('groupReceived', (e) => {
+      const wrapper = document.getElementById('date-info-wrapper');
+      if (!wrapper) return;
+      
+      const { name, image } = e.detail;
+      wrapper.insertAdjacentHTML('afterbegin', `
+        <span id="group-pill">
+          <img src="${image}" alt="${name}" onerror="this.src='/images/people.svg'">
+          <span>${name}</span>
+        </span>
+        <span class="seperator-dot">●</span>
+      `);
+    }, { once: true });
+  }
 };
 
 // Setup proposal interaction handlers
