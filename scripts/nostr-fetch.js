@@ -16,15 +16,16 @@ const sub = (id, prefix, filters, handleEvent) => {
   sendMessage(JSON.stringify(["REQ", window[id], filters]), handleEvent);
 };
 
+// Fetch events with pagination support
+const fetch = (subId, prefix, oldestTime, filters, handleEvent) => {
+  if (oldestTime) filters.until = oldestTime;
+  sub(subId, prefix, filters, handleEvent);
+};
+
 // Fetch proposal events (kind 30023/30024) with pagination
-export const fetchProposals = (oldestTime, handleEvent, customFilters) => {
-  const filters = { "#t": ["proposal"], ...customFilters };
-   // Add kinds if not already defined
-  if (!customFilters.kinds) {
-    filters.kinds = [30023];
-  }
-  if (oldestTime) filters.until = oldestTime; // Add pagination filter
-  sub('proposalSubId', 'ocp', filters, handleEvent);
+export const fetchProposals = (oldestTime, handleEvent, filters = {}) => {
+  const query = { "#t": ["proposal"], kinds: [30023], ...filters };
+  fetch('proposalSubId', 'ocp', oldestTime, query, handleEvent);
 };
 
 // Fetch reactions (kind 7) and comments (kind 1111)
@@ -71,8 +72,7 @@ export const fetchRelated = (uid, handleEvent) => {
 };
 
 // Fetch groups (kind 34550) with pagination
-export const fetchGroups = (oldestTime, handleEvent, customFilters = {}) => {
-  const filters = { kinds: [34550], ...customFilters };
-  if (oldestTime) filters.until = oldestTime;
-  sub('groupsSubId', 'ocp-g', filters, handleEvent);
+export const fetchGroups = (oldestTime, handleEvent, filters = {}) => {
+  const query = { kinds: [34550], ...filters };
+  fetch('groupsSubId', 'ocp-g', oldestTime, query, handleEvent);
 };
