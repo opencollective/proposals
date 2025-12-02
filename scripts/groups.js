@@ -1,37 +1,51 @@
 import { setupScrollObserver, getTag, generateUId } from "./utils.js";
 import { fetchGroups } from "./nostr-fetch.js";
 
+// DOM elements and state
 const id = document.getElementById.bind(document),
-  container = id("groups-container"),
-  stateEl = id("state"),
-  cache = new Map(),
-  savedUid = generateUId(JSON.parse(localStorage.getItem('group') || '{}'));
+  container = id("groups-container"), // Container for group cards
+  stateEl = id("state"), // Status message element
+  cache = new Map(), // Cache groups by UID to prevent duplicates
+  savedUid = generateUId(JSON.parse(localStorage.getItem("group") || "{}")); // Currently selected group UID
 
-let newCount = 0,
-  oldestTime = null,
-  isFetching = false;
+// Pagination state
+let newCount = 0, // Count of new groups loaded in current batch
+  oldestTime = null; // Timestamp of oldest group for pagination
 
+// Select a group and navigate back to previous page or home
 const selectGroup = (uid) => {
+  // Save selected group to localStorage
   localStorage.setItem("group", JSON.stringify(cache.get(uid)));
+  
+  // Update UI to show selected state
   document
     .querySelectorAll(".group-card")
     .forEach((c) => c.classList.toggle("selected", c.dataset.groupUid === uid));
 
+  // Navigate back to referrer or home (avoid loop if already on groups page)
   const referrer = document.referrer;
-  location.href = referrer.includes(location.origin) ? referrer : "/";
+  location.href =
+    referrer.includes(location.origin) && !referrer.includes("/groups")
+      ? referrer
+      : "/";
 };
 
+
+// Render a group card in the UI
 const groupCard = (uid, data) => {
+  // Skip if card already exists
   if (document.querySelector(`[data-group-uid="${uid}"]`)) return;
-  
+
+  // Extract group metadata from tags
   const { tags } = data,
     name = getTag(tags, "name") || getTag(tags, "d") || "Unnamed Group",
     image = getTag(tags, "image"),
     desc = getTag(tags, "description");
 
+  // Build card HTML with selected state if matches savedUid
   const card = `
     <div
-      class="group-card ${savedUid === uid ? 'selected' : ''}"
+      class="group-card ${savedUid === uid ? "selected" : ""}"
       data-group-uid="${uid}"
       onclick="selectGroup('${uid}')"
     >
@@ -43,52 +57,63 @@ const groupCard = (uid, data) => {
       >
       <div class="group-content">
         <div class="group-name">${name}</div>
-        ${desc ? `<div class="group-description">${desc}</div>` : ''}
+        ${desc ? `<div class="group-description">${desc}</div>` : ""}
       </div>
     </div>`;
-    
+
   container.insertAdjacentHTML("beforeend", card);
 };
 
-const onComplete = () => {
-  isFetching = false;
-  if (!newCount) {
-    if (stateEl) stateEl.innerHTML = cache.size ? 'All groups loaded' : 'No groups found';
+// Handle incoming group events from relays
+const handleGroup = (data) => {
+  // Only process kind 34550 (group definition events)
+  if (data.kind !== 34550) return;
+
+  // Generate unique ID from pubkey + d-tag
+  const uid = generateUId(data);
+  if (!uid) return;
+
+  // Skip if we have a newer version cached
+  const cached = cache.get(uid);
+  if (cached && cached.created_at >= data.created_at) return;
+
+  // Update pagination state and cache
+  newCount++;
+  if (!oldestTime || data.created_at < oldestTime) oldestTime = data.created_at;
+  cache.set(uid, data);
+  groupCard(uid, data);
+};
+
+// Check if loading is complete and setup pagination if needed
+const checkComplete = () => {
+  if (newCount === 0) {
+    // No new groups loaded - show completion message
+    if (stateEl)
+      stateEl.innerHTML = cache.size ? "All groups loaded" : "No groups found";
   } else if (newCount < 10) {
+    // Less than 10 groups - load more immediately
     loadGroups();
   } else {
-    setupScrollObserver(container, '.group-card', loadGroups);
+    // 10+ groups - setup infinite scroll for pagination
+    setupScrollObserver(container, ".group-card", loadGroups);
   }
 };
 
-const handleEvent = ([type, subId, data]) => {
-  if (type === "EOSE" && subId === window.groupsSubId) {
-    onComplete();
-  }
-  
-  if (type === "EVENT" && data.kind === 34550) {
-    oldestTime = oldestTime ? Math.min(oldestTime, data.created_at) : data.created_at;
-    
-    const uid = generateUId(data);
-    if (!uid || cache.get(uid)?.created_at >= data.created_at) return;
-    
-    if (!cache.has(uid)) {
-      newCount++;
-      groupCard(uid, data);
-    }
-    cache.set(uid, data);
-  }
-};
-
+// Load groups from relays with pagination
 const loadGroups = () => {
-  if (isFetching) return;
-  isFetching = true;
-  newCount = 0;
+  newCount = 0; // Reset counter for new batch
+  
+  // Build query with pagination (until = oldest timestamp)
+  const query = {};
+  if (oldestTime) query.until = oldestTime;
 
-  const filter = { limit: 20, ...(oldestTime && { until: oldestTime - 1 }) };
-
-  fetchGroups(oldestTime, handleEvent, filter );
+  fetchGroups(query, handleGroup, checkComplete);
 };
 
+// Expose selectGroup globally for onclick handlers
 window.selectGroup = selectGroup;
+
+// Start loading groups on page load
 loadGroups();
+
+// Flow: loadGroups → fetchGroups → handleGroup (cache & render) → checkComplete (status/pagination) → selectGroup (save & navigate)

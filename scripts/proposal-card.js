@@ -2,17 +2,21 @@ import snarkdown from "./snarkdown.bundle.mjs";
 import * as NostrTools from "./nostr-tools.bundle.mjs";
 import { setupDateFormatting, getTag, generateUId } from "./utils.js";
 
+// Display proposal card in browse/profile pages
 export const displayProposal = (event, fetchedProposals) => {
+  // Extract proposal data
   const { id, kind, pubkey, created_at, content, tags } = event,
-    publishedAt = getTag(tags, "published_at"),
+    publishedAt = getTag(tags, "published_at"), // Original publish timestamp
     title = getTag(tags, "title"),
-    orderUId = getTag(tags, "z"),
-    proposalUId = generateUId({ kind, pubkey, tags }),
+    orderUId = getTag(tags, "z"), // Unique order ID for display
+    proposalUId = generateUId({ kind, pubkey, tags }), // UID from pubkey + d-tag
     pathname = window.location.pathname.slice(1),
-    isNpubUrl = pathname.startsWith("npub");
+    isNpubUrl = pathname.startsWith("npub"); // Hide author info on profile page
 
+  // Prevent duplicates
   if (document.querySelector(`[data-proposals-uid="${proposalUId}"]`)) return;
 
+  // Encode IDs for URLs
   const nevent = NostrTools.nip19.neventEncode({
       id,
       author: pubkey,
@@ -23,26 +27,34 @@ export const displayProposal = (event, fetchedProposals) => {
 
   const noteHTML = `
     <div
-      class="proposal-card${kind === 30024 ? ' draft-proposal' : ''}"
+      class="proposal-card${kind === 30024 ? " draft-proposal" : ""}"
       data-proposal-id="${id}"
       data-proposals-uid="${proposalUId}"
       data-created-at="${created_at}"
       data-pubkey="${pubkey}"
     >
-      ${!isNpubUrl 
-        ? `<a href="/${npub}">
-            <img class="user-image" src="https://robohash.org/${pubkey}.png">
+      ${
+        !isNpubUrl
+          ? `<a href="/${npub}">
+            <img
+              class="user-image"
+              src="https://robohash.org/${pubkey}.png?bgset=bg2&size=40x40"
+              alt="User avatar"
+            >
           </a>`
-        : ""
+          : ""
       }
 
       <div class="proposal-card-content-container flex flex-col gap-md">
         <div class="grid">
-          ${!isNpubUrl
-            ? `<a href="/${npub}">
-                <div class="user-name">Anonymous</div>
-              </a>`
-            : ""
+          ${
+            !isNpubUrl
+              ? `<div class="flex">
+                <a class="user-name" href="/${npub}">
+                  Anonymous
+                </a>
+              </div>`
+              : ""
           }
           <div class="flex flex-wrap justify-between items-center">
             <div>
@@ -51,25 +63,26 @@ export const displayProposal = (event, fetchedProposals) => {
                 data-timestamp="${publishedAt || created_at}"
                  title="Published at"
               >
-                ${(publishedAt || created_at)}
+                ${publishedAt || created_at}
               </span>
               ${
                 publishedAt && +publishedAt !== created_at
                   ? `<span class="proposal-card-date date" title="Updated  at">
                       <span>● 📝</span>
-                      <span data-timestamp="${created_at}">${(created_at)}</span>
+                      <span data-timestamp="${created_at}">${created_at}</span>
                     </span>`
                   : ""
               }
             </div>
-            ${kind === 30024
-              ? `<span class="draft-badge">
+            ${
+              kind === 30024
+                ? `<span class="draft-badge">
                   <svg class="draft-badge-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 29">
                     <path fill="#656666" d="M18.7 26.4V29H16v-2.6zm2.6 0H24c0 1.5-1.2 2.6-2.7 2.6zm-8 0V29h-2.7v-2.6zm-5.3 0V29H5.3v-2.6zm-5.3 0V29C1.2 29 0 27.8 0 26.4zm18.6-10.6H24v2.6h-2.7zm0-2.6v-2.6H16c-1.5 0-2.7-1.2-2.7-2.6V2.6H2.7v10.5H0V2.6C0 1.2 1.2 0 2.7 0h13.9L24 7.4v5.8zM2.7 15.8v2.6H0v-2.6zm18.6 5.3H24v2.6h-2.7zm-18.6 0v2.6H0v-2.6zM16 3.2v4.7h4.8z"/><path fill="#656666" d="m17.02 14.66-2.69-2.69a.96.96 0 0 0-1.35 0l-7.39 7.4a1 1 0 0 0-.28.68v2.69c0 .53.43.96.96.96h2.69q.4 0 .68-.28l7.39-7.39a.95.95 0 0 0 0-1.36m-8.09 8.07H6.26v-2.69l5.28-5.27 2.68 2.69zm5.96-5.96-2.69-2.69 1.44-1.44 2.69 2.69z"/>
                   </svg>
                   Draft
                 </span>`
-              : ''
+                : ""
             }
           </div>
         </div>
@@ -95,9 +108,10 @@ export const displayProposal = (event, fetchedProposals) => {
           </div>
 
           <div class="flex items-center gap-sm">
-            ${orderUId 
-              ? `<div class="proposal-order-id" title="Proposal ID">#${orderUId}</div>` 
-              : ""
+            ${
+              orderUId
+                ? `<div class="proposal-order-id" title="Proposal ID">#${orderUId}</div>`
+                : ""
             }
           </div>
         </div>
@@ -105,15 +119,20 @@ export const displayProposal = (event, fetchedProposals) => {
     </div>
   `;
 
+  // Add card to container
   fetchedProposals.insertAdjacentHTML("beforeend", noteHTML);
-  setupDateFormatting(fetchedProposals.lastElementChild);
-  
-  // Add click handler to trigger main-link
+  setupDateFormatting(fetchedProposals.lastElementChild); // Format dates
+
+  // Make entire card clickable (except links)
   fetchedProposals.lastElementChild.onclick = (e) => {
-    if (!e.target.closest('.main-link')) e.currentTarget.querySelector('.main-link').click();
+    if (!e.target.closest(".main-link"))
+      e.currentTarget.querySelector(".main-link").click();
   };
-  
+
+  // Sort all cards by created_at (newest first)
   Array.from(document.querySelectorAll(".proposal-card"))
     .sort((a, b) => b.dataset.createdAt - a.dataset.createdAt)
     .forEach((proposal) => fetchedProposals.appendChild(proposal));
 };
+
+// Flow: displayProposal (extract data & check duplicates) → build HTML (with draft badge if kind 30024) → add to container → setupDateFormatting → add click handler → sort by timestamp

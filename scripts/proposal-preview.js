@@ -1,89 +1,85 @@
 import snarkdown from "./snarkdown.bundle.mjs";
 import * as NostrTools from "./nostr-tools.bundle.mjs";
-import { setupDateFormatting, getTag, linkifyNostr, generateUId, getFromLocalStorage } from "./utils.js";
 import { updateBreadcrumb } from "./breadcrumb.js";
+import {
+  getTag,
+  generateUId,
+  linkifyNostr,
+  setupDateFormatting,
+} from "./utils.js";
 
 const query = document.querySelector.bind(document);
-// Render proposal preview
+
+// Render proposal preview on proposal page
 export const renderProposalPreview = (proposal, container) => {
-  if (!proposal) return;
-  
+  if (!proposal) return; // No proposal to render
+
+  // Extract proposal data
   const { created_at, content, tags, pubkey } = proposal,
     title = getTag(tags, "title"),
-    orderUId = getTag(tags, "z"),
-    publishedAt = getTag(tags, "published_at"),
-    aTag = getTag(tags, "A"),
+    orderUId = getTag(tags, "z"), // Unique order ID
+    publishedAt = getTag(tags, "published_at"), // Original publish timestamp
+    aTag = getTag(tags, "A"), // Group reference
     uid = generateUId(proposal),
     npub = NostrTools.nip19.npubEncode(pubkey);
 
-  const userInfo = getFromLocalStorage("userInfo"),
-    isOwner = userInfo && pubkey === userInfo.pubkey;
-
-  // Process content with HTML support
-  const processedContent = content.split('\n').map(line => {
-    if (/<(video|source|iframe|img|audio)[^>]*>/i.test(line)) return line;
-    return snarkdown(linkifyNostr(line));
-  }).join('\n');
+  // Process content: preserve HTML tags, convert markdown for other lines
+  const processedContent = content
+    .split("\n")
+    .map((line) => {
+      if (/<(video|source|iframe|img|audio)[^>]*>/i.test(line)) return line; // Keep HTML
+      return snarkdown(linkifyNostr(line)); // Convert markdown
+    })
+    .join("\n");
 
   // Update breadcrumb and page title
   updateBreadcrumb(title);
-  document.title = title ? `Open Collective - ${title}` : 'Open Collective';
+  document.title = (title ? `${title} - ` : "") + "Open Collective - Proposal";
 
   container.innerHTML = `
     <div class="flex flex-col gap-lg" data-proposals-uid="${uid}" data-pubkey="${pubkey}">
      
       <div class="flex gap-sm items-center">
         <a href="/${npub}">
-          <img class="user-image" src="https://robohash.org/${pubkey}.png?size=40x40">
+          <img
+            class="user-image"
+            src="https://robohash.org/${pubkey}.png?bgset=bg2&size=40x40"
+            alt="User avatar"
+          />
         </a>
         <div class="flex flex-col flex-grow gap-xs text-sm">
-          <a href="/${npub}" class="user-name">Anonymous</a>
+          <div><a href="/${npub}" class="user-name">Anonymous</a></div>
           <div class="date-info-container flex justify-between items-center">
             <div id="date-info-wrapper">
               <span data-timestamp="${publishedAt || created_at}" title="Published at">
                 ${publishedAt || created_at}
               </span>
-              ${publishedAt && +publishedAt !== created_at 
-                ? `<span class="seperator-dot">●</span>
+              ${
+                publishedAt && +publishedAt !== created_at
+                  ? `<span class="seperator-dot">●</span>
                   <span title="Updated at">
                     📝
                     <span data-timestamp="${created_at}">
                       ${created_at}
                     </span>
-                  </span>` 
-                : ""
+                  </span>`
+                  : ""
               }
             </div>
           </div>
         </div>
-        <div class="grid gap-sm">
-           ${proposal.kind === 30024 
-            ? `<div class="draft-badge">
+        <div class="grid gap-sm" id="proposal-actions-container">
+          ${
+            proposal.kind === 30024
+              ? `<div class="draft-badge">
                 <svg class="draft-badge-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 29">
                   <path fill="#656666" d="M18.7 26.4V29H16v-2.6zm2.6 0H24c0 1.5-1.2 2.6-2.7 2.6zm-8 0V29h-2.7v-2.6zm-5.3 0V29H5.3v-2.6zm-5.3 0V29C1.2 29 0 27.8 0 26.4zm18.6-10.6H24v2.6h-2.7zm0-2.6v-2.6H16c-1.5 0-2.7-1.2-2.7-2.6V2.6H2.7v10.5H0V2.6C0 1.2 1.2 0 2.7 0h13.9L24 7.4v5.8zM2.7 15.8v2.6H0v-2.6zm18.6 5.3H24v2.6h-2.7zm-18.6 0v2.6H0v-2.6zM16 3.2v4.7h4.8z"/>
                   <path fill="#656666" d="m17.02 14.66-2.69-2.69a.96.96 0 0 0-1.35 0l-7.39 7.4a1 1 0 0 0-.28.68v2.69c0 .53.43.96.96.96h2.69q.4 0 .68-.28l7.39-7.39a.95.95 0 0 0 0-1.36m-8.09 8.07H6.26v-2.69l5.28-5.27 2.68 2.69zm5.96-5.96-2.69-2.69 1.44-1.44 2.69 2.69z"/>
                 </svg>
                 Draft
               </div>`
-            : ''
-          }
-          
-            ${isOwner
-              ? `<div class="flex gap-sm update-buttons-container">
-                  <button class="button" id="edit-button" title="Edit Proposal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path fill="#656666" d="M23.44 5.93 18.06.56a1.9 1.9 0 0 0-2.7 0L.57 15.36c-.37.35-.57.84-.57 1.35v5.37C0 23.14.86 24 1.92 24H7.3c.51 0 1-.2 1.35-.57L23.44 8.65c.75-.75.75-1.96 0-2.71M7.28 22.08H1.92v-5.37L12.49 6.16l5.36 5.37zM19.2 10.17 13.82 4.8l2.89-2.87 5.38 5.37z"/>
-                    </svg>
-                  </button>
-                  <button class="button" id="delete-button" title="Delete Proposal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 24">
-                      <path fill="#656666" d="M11 0C9 0 7.3 1.6 7.3 3.6H.9c-.5 0-.9.4-.9.9s.4.9.9.9h1.5v15.3c0 1.8 1.5 3.3 3.4 3.3h10.4c1.8 0 3.4-1.5 3.4-3.3V5.4h1.5c.5 0 .9-.4.9-.9s-.4-.9-.9-.9h-6.4C14.7 1.6 13 0 11 0m0 1.8c1 0 1.8.8 1.8 1.8H9.1c0-1 .8-1.8 1.8-1.8M4.3 5.4h13.4v15.3c0 .8-.7 1.5-1.5 1.5H5.8c-.9 0-1.5-.7-1.5-1.5zm4.5 3c-.5 0-.9.4-.9.9v9c0 .5.4.9.9.9s.9-.4.9-.9v-9c0-.5-.4-.9-.9-.9m4.3 0c-.5 0-.9.4-.9.9v9c0 .5.4.9.9.9s.9-.4.9-.9v-9c0-.5-.4-.9-.9-.9"/>
-                    </svg>
-                  </button>
-                </div>`
               : ""
-            }
-            
+          }
         </div>
       </div>
       ${title ? `<h1 class="title">${title}</h1>` : ""}
@@ -109,9 +105,10 @@ export const renderProposalPreview = (proposal, container) => {
         </div>
         
         <div class="flex items-center gap-sm">
-          ${orderUId 
-            ? `<div class="proposal-order-id" title="Proposal ID">#${orderUId}</div>` 
-            : ""
+          ${
+            orderUId
+              ? `<div class="proposal-order-id" title="Proposal ID">#${orderUId}</div>`
+              : ""
           }
         </div>
       </div>
@@ -119,51 +116,61 @@ export const renderProposalPreview = (proposal, container) => {
     </div>
   `;
 
-  // Setup click handlers
+  // Setup click handlers and date formatting
   setupProposalInteractions(container, proposal);
   setupDateFormatting(container);
-  
+
+  // Listen for group data if proposal has group reference
   if (aTag) {
-    window.addEventListener('groupReceived', (e) => {
-      const wrapper = document.getElementById('date-info-wrapper');
-      if (!wrapper) return;
-      
-      const { name, image } = e.detail;
-      wrapper.insertAdjacentHTML('afterbegin', `
+    window.addEventListener(
+      "groupReceived",
+      (e) => {
+        const wrapper = document.getElementById("date-info-wrapper");
+        if (!wrapper) return;
+
+        // Add group pill to date info
+        const { name, image } = e.detail;
+        wrapper.insertAdjacentHTML(
+          "afterbegin",
+          `
         <span id="group-pill">
           <img src="${image}" alt="${name}" onerror="this.src='/images/people.svg'">
           <span>${name}</span>
         </span>
         <span class="seperator-dot">●</span>
-      `);
-    }, { once: true });
+      `,
+        );
+      },
+      { once: true },
+    ); // Listen once
   }
 };
 
-// Setup proposal interaction handlers
+// Setup click handlers for reactions and comments
 const setupProposalInteractions = (container, proposal) => {
-  const reactionsCount = container.querySelector(".reaction-item.reactions .count"),
+  const reactionsCount = container.querySelector(
+      ".reaction-item.reactions .count",
+    ),
     commentsIcon = container.querySelector(".reaction-item.comments .icon"),
-    commentsCount = container.querySelector(".reaction-item.comments .count"),
-    editButton = container.querySelector("#edit-button");
+    commentsCount = container.querySelector(".reaction-item.comments .count");
 
-  editButton?.addEventListener('click', () => {
-    localStorage.setItem('editProposal', JSON.stringify(proposal));
-    window.location.href = '/create';
-  });
-
-  reactionsCount?.addEventListener('click', () => {
+  // Reactions count: toggle reactions container visibility
+  reactionsCount?.addEventListener("click", () => {
     const reactionsContainer = document.querySelector(".reactions-container");
     reactionsContainer?.classList.toggle("hidden");
     reactionsContainer?.scrollIntoView();
   });
 
-  commentsIcon?.addEventListener('click', () => {
+  // Comments icon: scroll to comments and focus input
+  commentsIcon?.addEventListener("click", () => {
     query(".comments-container")?.scrollIntoView();
     document.getElementById("comment-input")?.focus();
   });
 
-  commentsCount?.addEventListener('click', () => {
+  // Comments count: scroll to comment input
+  commentsCount?.addEventListener("click", () => {
     document.querySelector(".comment-inputs-container")?.scrollIntoView();
   });
 };
+
+// Flow: renderProposalPreview (extract data & process content) → build HTML (with draft badge if kind 30024) → setupProposalInteractions (click handlers) → setupDateFormatting → listen for groupReceived event

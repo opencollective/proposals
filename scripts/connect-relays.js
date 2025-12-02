@@ -6,7 +6,7 @@ const primaryRelays = [
   "wss://relay.primal.net",
 ];
 
-let activeRelays = new Set(primaryRelays); // Keep track of active relay connections
+window.activeRelays = new Set(primaryRelays); // Keep track of active relay connections
 
 const maxReconnectAttempts = 2,
   reconnectDelay = 5000,
