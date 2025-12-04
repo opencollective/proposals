@@ -14,13 +14,13 @@ export const updateProfile = (pubkey, user = false) => {
   // Helper to get display name
   const getName = (p) => p.display_name || p.displayName || p.name || "Anonymous";
   // Init vars
-  let picture, userName = "Anonymous", created_at = Date.now();
+  let picture, userName = "Anonymous", created_at = "";
   
   // Handle userInfo structure
   if (user) {
     ({ picture, created_at } = profile);
     userName = getName(profile);
-    created_at = created_at || Date.now();
+    created_at = created_at || "";
   // Handle profile cache structure
   } else if (profile.content) {
     try {
@@ -35,6 +35,15 @@ export const updateProfile = (pubkey, user = false) => {
   if (window.location.pathname.slice(1).startsWith("npub")) {
     const breadcrumb = document.querySelector(".breadcrumb-item.current");
     if (breadcrumb) breadcrumb.textContent = userName;
+    
+    // Update user-profile section (name and picture)
+    const userProfileEl = document.querySelector(".user-profile");
+    if (userProfileEl && userProfileEl.dataset.pubkey === pubkey) {
+      const nameEl = userProfileEl.querySelector(".user-name");
+      const imgEl = userProfileEl.querySelector(".user-image");
+      if (nameEl) nameEl.textContent = userName;
+      if (imgEl) imgEl.src = picture || `https://robohash.org/${pubkey}.png?size=80x80`;
+    }
   }
   
   // Update all elements with matching pubkey
@@ -52,3 +61,5 @@ export const updateProfile = (pubkey, user = false) => {
     }
   });
 };
+
+// Note: Updates breadcrumb, user-profile section, and all elements with matching data-pubkey attribute

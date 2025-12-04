@@ -30,21 +30,7 @@ if (!profilePubkey) {
 }
 
 // Check if viewing own profile
-const userInfo = getFromLocalStorage("userInfo"),
-  isOwner = userInfo?.pubkey === profilePubkey;
-
-// Update UI elements if viewing own profile
-const updateOwnProfile = () => {
-  if (isOwner) {
-    updateCreateButton(); // Show create button
-    updateProfile(profilePubkey, true); // Enable edit mode
-  }
-};
-
-updateOwnProfile();
-
-// Listen for login/logout events to update own profile UI
-window.addEventListener("userInfoUpdated", updateOwnProfile);
+let isOwner = getFromLocalStorage("userInfo")?.pubkey === profilePubkey;
 
 // Display selected group in UI
 showSelectedGroup();
@@ -59,4 +45,23 @@ const filters = {
 const browser = browse({ filters, fetchProfileFirst: profilePubkey });
 browser.load();
 
-// Flow: Extract npub → NostrTools.nip19.decode (to pubkey) → check ownership → updateOwnProfile (UI setup) → showSelectedGroup → browse.load() → fetchProposals → handleProposal (cache & render) → fetchProfiles → fetchRelated (reactions/comments)
+// Update UI elements if viewing own profile (after browse loads profile)
+const updateOwnProfile = () => {
+  const wasOwner = isOwner;
+  isOwner = getFromLocalStorage("userInfo")?.pubkey === profilePubkey;
+  
+  if (isOwner) {
+    updateCreateButton(); // Show create button
+    updateProfile(profilePubkey, true); // Enable edit mode
+    
+    // Reload page if user just logged in to their own profile
+    if (!wasOwner) {
+      location.reload();
+    }
+  }
+};
+
+// Listen for login/logout events to update own profile UI
+window.addEventListener("userInfoUpdated", updateOwnProfile);
+
+// Flow: Extract npub → NostrTools.nip19.decode (to pubkey) → check ownership → showSelectedGroup → browse.load() → fetchProposals & fetchProfiles → delayed updateOwnProfile (UI setup & reload if just logged in) → handleProposal (cache & render) → fetchRelated (reactions/comments)
