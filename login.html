@@ -8,105 +8,199 @@
   <meta property="og:title" content="Login - Open Collective">
   <meta property="og:description" content="Sign in to Open Collective. Choose from email, Nostr extension, or bunker authentication.">
   <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg">
-  <link rel="stylesheet" type="text/css" href="/styles/global.css">
+  <link rel="preload" href="/fonts/SofiaSans.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" type="text/css" href="/styles/login.css">
 </head>
 <body>
-  <div class="flex items-center justify-center login-container">
-    <div class="login-card grid gap-lg">
-      <div class="login-header">
-        <img src="/images/opencollective.svg" alt="Open Letter" class="brand-logo">
-        <h1 class="title">Welcome to <span class="brand-text">Open-Collective</span></h1>
-        <p>Choose your authentication method</p>
-      </div>
+  <div class="wrapper">
 
-      <div class="login-options grid gap-lg">
-        <!-- Email Authentication -->
-        <div class="grid gap-sm">
-          <h2 class="auth-title">Email Authentication</h2>
-          <p class="auth-text">Authenticate using your email address by Openbunker</p>
+    <div class="login-card-container">
+      <div class="login-card corner-radius-16 overflow-hidden">
+        <div class="login-header grid gap-16 px-32 py-24 items-center justify-center text-center">
+          <img src="/images/header-image.webp" alt="Open Letter" class="brand-logo">
+          <h1 class="section-title">
+            Welcome to <br/> 
+            <span class="font-bold">Open-Collective</span>
+          </h1>
         </div>
-        
-        <form id="email-form" class="email-form">
-          <input type="email" id="email-input" placeholder="Enter your email address" required>
-          <div class="button-container">
-            <button class="btn-primary" type="submit" id="send-code-btn">
-              <span class="btn-text">Send Verification Code</span>
-              <div class="spinner hidden"></div>
-            </button>
-            <span class="button-info" title="OpenBunker lets you sign using your email. In the background it connects you to Nostr, an open internet protocol that works a bit like email but for public messages and digital signatures.
-Instead of storing your data on one central server, Nostr spreads it across many independent servers so no single company owns or controls it.
-Your key is managed by OpenBunker, so you can use Nostr without needing technical knowledge.
-You can later withdraw a signature, but both the signature and the withdrawal remain visible as open data for transparency.">
-            ?
-            </span>
-          </div>
-          
-        </form>
 
-        <form id="verify-form" class="verify-form hidden">
-          <div class="success-message message">
-            <span>✓ Code sent to <span id="sent-email"></span></span>
+        <div class="login-options">
+
+          <!-- Email Authentication -->
+          <div
+            id="email-form" 
+            class="grid gap-16 px-32 py-32 pt-0 items-center justify-center text-center"
+          >
+            <p class="body-text-caption">
+              Sign in with your digital identity to participate, or create one now using your email.
+            </p>
+            
+            <form class="form email-form grid gap-12 py-32 pt-0" novalidate>
+              <div class="grid gap-8">
+                <label for="email-input">
+                  Continue with email
+                  <span>— no password required</span>
+                </label>
+                <input type="email" id="email-input" autofocus>
+              </div>
+
+              <div class="message"></div>
+
+              <button class="btn btn-primary" type="submit" id="send-code-btn">
+                <span class="btn-text">Send a one-time connection code</span>
+                <div class="spinner hidden"></div>
+              </button>
+            </form>
+
+            <div class="flex justify-center">
+              <a href="#" class="link">What is a digital ID?</a>
+            </div>
           </div>
-          <input type="text" id="code-input" placeholder="123456" maxlength="6" required>
-          <div class="flex gap-lg">
-            <button class="btn-secondary flex-grow" type="button" id="reset-btn">Start Over</button>
-            <button class="btn-primary flex-grow" type="submit" id="verify-btn" disabled>
-              <span class="btn-text">Verify Code</span>
-              <div class="spinner hidden"></div>
-            </button>
+
+          <!-- Advanced -->
+          <div
+            id="other-login-methods"
+            class="hidden email-authentication grid gap-16 px-32 items-center justify-center text-center"
+          >
+            <p class="body-text-caption">
+              Sign into the Nostr network to participate.
+            </p >
+            
+            <div class="form email-form grid gap-12 py-32 pt-0">
+              <div class="flex flex-col gap-8">
+                <button class="btn btn-secondary" id="extension-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="20px" height="20px">
+                    <path fill="#fff" d="M231.2 159.5c0 20.7 0 31.1-3.5 42.2-4.4 12.2-14 21.8-26.2 26.2-11.1 3.5-21.5 3.5-42.2 3.5H96.8c-20.7 0-31.1 0-42.2-3.5-12.2-4.4-21.8-14-26.2-26.2-3.5-11.1-3.5-21.5-3.5-42.2V97c0-20.7 0-31.1 3.5-42.2 4.4-12.2 14-21.8 26.2-26.2 11.2-3.5 21.5-3.5 42.2-3.5h62.5c20.7 0 31.1 0 42.2 3.5 12.2 4.4 21.8 14 26.2 26.2 3.5 11.2 3.5 21.5 3.5 42.2v62.5Z"/>
+                    <path fill="#662482" d="M210.8 199.4c0 3.1-2.5 5.7-5.7 5.7h-68c-3.1 0-5.7-2.5-5.7-5.7v-15.5c.3-19 2.3-37.2 6.5-45.5 2.5-5 6.7-7.7 11.5-9.1 9.1-2.7 24.9-.9 31.7-1.2 0 0 20.4.8 20.4-10.7s-9.1-8.6-9.1-8.6c-10 .3-17.7-.4-22.6-2.4-8.3-3.3-8.6-9.2-8.6-11.2-.4-23.1-34.5-25.9-64.5-20.1-32.8 6.2.4 53.3.4 116.1v8.4c0 3.1-2.6 5.6-5.7 5.6H57.7c-3.1 0-5.7-2.5-5.7-5.7v-144c0-3.1 2.5-5.7 5.7-5.7h31.7c3.1 0 5.7 2.5 5.7 5.7 0 4.7 5.2 7.2 9 4.5 11.4-8.2 26-12.5 42.4-12.5 36.6 0 64.4 21.4 64.4 68.7v83.2ZM150 99.3c0-6.7-5.4-12.1-12.1-12.1s-12.1 5.4-12.1 12.1 5.4 12.1 12.1 12.1S150 106 150 99.3Z"/>
+                  </svg>
+                  <span class="btn-text">Connect with Nostr extension</span>
+                  <div class="spinner hidden"></div>
+                </button>
+
+                <div class="message"></div>
+              </div>
+
+              <div class="or-divider">or</div>
+
+              <div class="grid gap-8">
+                <label for="nsec-input" class="flex items-center gap-12">
+                  Enter Bunker URL
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16px" height="16px">
+                    <path fill-opacity=".46" d="M8.05 0c1.71 0 3.05 0 4.1.15a4.2 4.2 0 0 1 2.6 1.11 4 4 0 0 1 1.11 2.6C16 4.9 16 6.25 16 7.95v.09c0 1.71 0 3.05-.14 4.1a4.2 4.2 0 0 1-1.11 2.6 4 4 0 0 1-2.6 1.11c-1.04.14-2.39.14-4.1.14h-.09c-1.71 0-3.05 0-4.1-.14a4.2 4.2 0 0 1-2.6-1.11 4 4 0 0 1-1.1-2.6C.01 11.1.01 9.75.01 8.04v-.09c0-1.71 0-3.05.15-4.1.05-.97.44-1.89 1.1-2.6A4 4 0 0 1 3.85.16C4.89 0 6.24 0 7.94 0zm-.04 1.18c-1.77 0-3.03 0-4 .12-.94.12-1.51.36-1.93.78s-.66.99-.78 1.93c-.12.97-.12 2.23-.12 4s0 3.02.12 3.99c.12.94.36 1.51.78 1.93s.99.66 1.93.79c.97.12 2.23.12 4 .12s3.02 0 3.99-.12c.94-.14 1.51-.37 1.93-.79s.66-.98.79-1.93c.12-.96.12-2.23.12-3.99s0-3.03-.12-4c-.14-.94-.37-1.51-.79-1.93s-.98-.66-1.93-.78-2.23-.12-3.99-.12m-.58 5.46h.49c.17.04.39.09.57.28q.25.3.26.57l.02.48v3.93a.58.58 0 0 1-1.16 0V7.8H7.4a.58.58 0 0 1 0-1.16zm.58-2.54a.78.78 0 1 1 0 1.56.78.78 0 0 1 0-1.56"/>
+                  </svg>
+                </label>
+                <input type="text" id="bunker-input">
+
+                <button class="btn btn-primary" id="bunker-btn">
+                  <span class="btn-text">Connect with Bunker</span>
+                  <div class="spinner hidden"></div>
+                </button>
+
+                <div class="message"></div>
+              </div>
+            </div>
+
+            <div class="flex flex-col justify-center gap-8 hidden">
+              <p class="body-text-caption">Nostr extension not found, please install</p>
+              <p class="body-text-caption">
+                Don't have any account yet? 
+                <a
+                  class="link"
+                  href="https://nstart.me/en?an=Opencollective&at=web&aa=134ECD&ac=https://opencollective.earth"
+                >
+                  Create
+                </a>
+              </p>
+            </div>
+
           </div>
-        </form>
+
+          <div
+            id="verify-form"
+            class="grid gap-16 px-32 py-32 pt-0 items-center justify-center text-center hidden"
+          >
+            <h2 class="section-title hidden">Check your email to finish signing in</h2>
+            <p class="body-text-caption">
+              Once you enter the code we sent to your email
+              <strong id="sent-email"></strong>, you’ll be connected.
+            </p>
+            
+            <div class="form grid gap-12">
+              <div class="grid gap-8">
+                <label for="code-input">
+                  Paste or type the code below
+                </label>
+                <div class="otp-inputs flex items-center justify-center gap-8">
+                  <input type="text" class="otp-input" maxlength="1" data-index="0" autofocus>
+                  <input type="text" class="otp-input" maxlength="1" data-index="1">
+                  <input type="text" class="otp-input" maxlength="1" data-index="2">
+                  <span class="otp-separator">-</span>
+                  <input type="text" class="otp-input" maxlength="1" data-index="3">
+                  <input type="text" class="otp-input" maxlength="1" data-index="4">
+                  <input type="text" class="otp-input" maxlength="1" data-index="5">
+                </div>
+                <input type="hidden" id="code-input">
+              </div>
+              
+              <div class="message"></div>
+
+              <div class="grid justify-center">
+                <p class="body-text-caption resend-text">
+                  Didn’t get the code?  Resend in <span id="countdown">50 seconds</span>
+                </p>
+                <div class="link resend-btn hidden">Resend</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Advanced Toggle -->
-        <div class="advanced-toggle-container">
-          <div id="advanced-toggle" class="advanced-toggle">
-            <span>Advanced</span>
-            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+        <div id="advanced-toggle" class="btn toggle-btn">
+          Advanced users
+          <svg class="icon" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
 
-        <!-- Other Login Methods -->
-        <div id="other-login-methods" class="grid gap-lg hidden">
-          <div class="other-logins grid gap-lg">
-            <div class="button-container">
-              <button id="nostr-login-btn">Login with Nostr Extension</button>
-              <span class="button-info" title="Nostr is an open internet protocol that lets you have your own digital identity across different websites, without needing an account on a single platform.
-  If you use a browser extension, it signs messages directly from your device instead of using an email or a service like OpenBunker.
-  You fully own your key and identity, but you are also responsible for keeping your key private and secure.
-  If someone else gets your key, your identity can no longer be trusted or recovered.">?</span>
+        <div id="email-toggle" class="btn toggle-btn hidden">
+          <svg class="icon" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Connect with email
+        </div>
+
+        <div class="submit-code hidden" id="verify-code-toggle">
+        <div class="flex">
+            <div class="flex items-center justify-center flex-1">
+              <span id="reset-btn" class="flex items-center gap-8 cursor-pointer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back to sign-in
+              </span>
             </div>
-            <input type="text" id="nsec-input" class="hidden" placeholder="Input nsec bunker url">
-            <div class="button-container">
-              <button id="bunker-login-btn">Login with Bunker</button>
-              <span class="button-info" title="Nostr is an open internet protocol where your identity is verified by digital signatures instead of passwords or accounts.
-  A Nostr bunker is a secure online vault that keeps your signing key safe and can sign messages for you when you give permission.
-  You can connect your bunker to different Nostr apps and services, including Open Letter.">?</span>
-            </div>
-          </div>
-          
-          <div id="create-acc-info" class="create-account ">
-            <p>Nostr extension not found, please install</p>
-            <p>Don't have any account yet? 
-              <a href="https://nstart.me/en?an=Opencollective&at=web&aa=134ECD&ac=https://opencollective.earth">
-                Create
-              </a>
-            </p>
+            <button class="btn btn-bottom-right btn-primary flex-1 radius-0" type="submit" id="verify-btn" disabled>
+              <span class="btn-text">Sign in</span>
+              <div class="spinner hidden"></div>
+            </button>
           </div>
         </div>
       </div>
-
-      <div id="message-display" class="message hidden"></div>
-
-      <a href="/" class="back-link" onclick="history.back()">
-        <svg class="arrow-icon" viewBox="0 0 24 24" fill="none">
-          <path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Go back
-      </a>
     </div>
+
+    <footer class="body-text-caption grid gap-8 text-center justify-center">
+      <div class="footer-heading flex flex-wrap gap-8 items-center justify-center">
+        We're secured by
+        <svg class="footer-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+          <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+        </svg>
+        Open Collective
+      </div>
+      <div class="footer-text">
+        We use local encryption to protect your identity. Whether you connect via email or your own key, your private credentials remain under your control and are never exposed to the web.
+      </div>
+    </footer>
   </div>
 
   <script src="/scripts/connect-relays.js"></script>

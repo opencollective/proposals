@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - Open Collective</title>
+  <meta name="description" content="Set up your profile on Open Collective.">
+  <meta property="og:title" content="User Profile - Open Collective">
+  <meta property="og:description" content="Set up your profile on Open Collective.">
+  <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg">
+  <link rel="preload" href="/fonts/SofiaSans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" type="text/css" href="/styles/login.css">
+</head>
+<body>
+  <div class="wrapper">
+
+    <div class="login-card-container">
+      <div class="login-card corner-radius-16 overflow-hidden">
+        <div class="login-header grid gap-16 px-32 py-24 items-center justify-center text-center">
+          <img src="/images/header-image.webp" alt="Open Letter" class="brand-logo">
+          <h1 class="section-title">Successfully connected</h1>
+        </div>
+
+        <div class="login-options">
+          <div class="grid gap-16 px-32 py-32 pt-0 items-center justify-center text-center">
+            <p class="body-text-caption">
+              Share your name so everyone knows who you are and can appreciate your contributions!
+            </p>
+            
+            <form class="form grid gap-12 py-32 pt-0" novalidate>
+              <div class="grid gap-8">
+                <label for="name-input">Enter your full name</label>
+                <input type="text" id="name-input" autofocus>
+              </div>
+
+              <div class="message"></div>
+            </form>
+          </div>
+        </div>
+
+        <div class="submit-code" id="action-buttons">
+          <div class="flex">
+            <div class="flex items-center justify-center flex-1">
+              <span id="skip-btn" class="cursor-pointer">Remain anonymous</span>
+            </div>
+            <button class="btn btn-bottom-right btn-primary flex-1" type="submit" id="save-btn">
+              <span class="btn-text">Save and continue</span>
+              <div class="spinner hidden"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="body-text-caption grid gap-8 text-center justify-center">
+      <div class="footer-heading flex flex-wrap gap-8 items-center justify-center">
+        We're secured by
+        <svg class="footer-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+          <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+        </svg>
+        Open Collective
+      </div>
+      <div class="footer-text">
+        We use local encryption to protect your identity. Whether you connect via email or your own key, your private credentials remain under your control and are never exposed to the web.
+      </div>
+    </footer>
+  </div>
+
+  <script src="/scripts/connect-relays.js"></script>
+  <script src="/scripts/user-metadata.js" type="module"></script>
+</body>
+</html>
