@@ -14,12 +14,12 @@ export default {
 
     // Handle profile URLs (npub)
     if (path.startsWith("npub1") && !path.includes("/")) {
-      return env.ASSETS.fetch(origin + "/profile.html");
+      return env.ASSETS.fetch(origin + "/profile/index.html");
     }
 
     // Handle Open Letter URLs (nevent/naddr or 64-character paths)
     if ((path.startsWith("nevent1") || path.startsWith("naddr1") || (path.length >= 64 && !path.includes("/"))) && !path.startsWith("npub1")) {
-      return env.ASSETS.fetch(origin + "/proposal.html");
+      return env.ASSETS.fetch(origin + "/proposal/index.html");
     }
 
     return env.ASSETS.fetch(request.url);
