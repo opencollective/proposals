@@ -1,5 +1,6 @@
 import { setupScrollObserver, getTag, generateUId } from "./utils.js";
 import { fetchGroups } from "./nostr-fetch.js";
+import * as NostrTools from "./nostr-tools.bundle.mjs";
 
 // DOM elements and state
 const id = document.getElementById.bind(document),
@@ -15,19 +16,28 @@ let newCount = 0, // Count of new groups loaded in current batch
 // Select a group and navigate back to previous page or home
 const selectGroup = (uid) => {
   // Save selected group to localStorage
-  localStorage.setItem("group", JSON.stringify(cache.get(uid)));
+  localStorage.setItem("group", JSON.stringify(groupData));
+  
+  // Generate naddr for URL
+  const dTag = getTag(groupData.tags, "d");
+  let targetUrl = "/";
+  
+  if (dTag) {
+    const naddr = NostrTools.nip19.naddrEncode({
+      kind: groupData.kind,
+      pubkey: groupData.pubkey,
+      identifier: dTag
+    });
+    targetUrl = `/?group=${naddr}`;
+  }
   
   // Update UI to show selected state
   document
     .querySelectorAll(".group-card")
     .forEach((c) => c.classList.toggle("selected", c.dataset.groupUid === uid));
 
-  // Navigate back to referrer or home (avoid loop if already on groups page)
-  const referrer = document.referrer;
-  location.href =
-    referrer.includes(location.origin) && !referrer.includes("/groups")
-      ? referrer
-      : "/";
+  // Navigate to home with group parameter
+  location.href = targetUrl;
 };
 
 
