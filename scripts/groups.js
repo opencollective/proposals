@@ -15,6 +15,8 @@ let newCount = 0, // Count of new groups loaded in current batch
 
 // Select a group and navigate back to previous page or home
 const selectGroup = (uid) => {
+  const groupData = cache.get(uid);
+  
   // Save selected group to localStorage
   localStorage.setItem("group", JSON.stringify(groupData));
   

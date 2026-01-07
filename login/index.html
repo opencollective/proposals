@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/login/">
   <title>Login - Open Collective</title>
   <meta name="description" content="Sign in to Open Collective. Choose from email, Nostr extension, or bunker authentication.">
   <meta property="og:title" content="Login - Open Collective">
   <meta property="og:description" content="Sign in to Open Collective. Choose from email, Nostr extension, or bunker authentication.">
-  <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg">
-  <link rel="preload" href="/fonts/SofiaSans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" type="text/css" href="/styles/login.css">
+  <link rel="icon" type="image/svg+xml" href="./images/opencollective.svg">
+  <link rel="preload" href="./fonts/SofiaSans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" type="text/css" href="./styles/login.css">
 </head>
 <body>
   <div class="wrapper">
@@ -17,7 +18,7 @@
     <div class="login-card-container">
       <div class="login-card corner-radius-16 overflow-hidden">
         <div class="login-header grid gap-16 px-32 py-24 items-center justify-center text-center">
-          <img src="/images/header-image.webp" alt="Open Letter" class="brand-logo">
+          <img src="./images/header-image.webp" alt="Open Letter" class="brand-logo">
           <h1 class="section-title">
             Welcome to <br/> 
             <span class="font-bold">Open-Collective</span>
@@ -203,8 +204,8 @@
     </footer>
   </div>
 
-  <script src="/scripts/connect-relays.js"></script>
-  <script src="/scripts/email-auth.js" type="module"></script>
-  <script src="/scripts/login-page.js" type="module"></script>
+  <script src="./scripts/connect-relays.js"></script>
+  <script src="./scripts/email-auth.js" type="module"></script>
+  <script src="./scripts/login-page.js" type="module"></script>
 </body>
 </html>

@@ -66,7 +66,7 @@ const showMessage = (text, type = "error", container) => {
     messageEl.classList.remove("hidden", "error", "success");
     messageEl.classList.add(type);
     const icon = type === "success" ? "success" : "error";
-    messageEl.innerHTML = `<img src="images/${icon}.svg" class="icon"><span>${text}</span>`;
+    messageEl.innerHTML = `<img src="./images/${icon}.svg" class="icon"><span>${text}</span>`;
   },
   hideMessage = () => {
     document.querySelectorAll(".message").forEach(el => {

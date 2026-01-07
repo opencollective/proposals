@@ -1,9 +1,10 @@
 import * as NostrTools from "./nostr-tools.bundle.mjs";
 import { handleLogin } from "./auth-utils.js";
-import { getFromLocalStorage } from "./utils.js";
 
 // Initialize global profile cache
 window.profileCache = window.profileCache || new Map();
+
+const getFromLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || null;
 
 // Add user pubkey to cache for automatic fetching
 const addUserToCache = () => {

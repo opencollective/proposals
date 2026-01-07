@@ -25,7 +25,7 @@ export function checkUserMetadataAndRedirect(pubkey) {
       } else if (document.referrer && !document.referrer.includes("login")) {
         localStorage.setItem("returnUrl", document.referrer);
       }
-      window.location.href = "/user-metadata.html";
+      window.location.href = "./user-metadata.html";
     }
   };
 

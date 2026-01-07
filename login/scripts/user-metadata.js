@@ -1,8 +1,8 @@
 import sendMessage from "./send-message.js";
-import { getFromLocalStorage } from "./utils.js";
 import * as NostrTools from "./nostr-tools.bundle.mjs";
 
-const userInfo = getFromLocalStorage("userInfo");
+const getFromLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || null,
+  userInfo = getFromLocalStorage("userInfo");
 
 // Check if user already has a name, redirect if they do
 if (userInfo?.name || userInfo?.displayName || userInfo?.display_name) {
@@ -25,7 +25,7 @@ const showMessage = (text, type = "error") => {
     messageEl.classList.remove("hidden", "error", "success");
     messageEl.classList.add(type);
     const icon = type === "success" ? "success" : "error";
-    messageEl.innerHTML = `<img src="images/${icon}.svg" class="icon"><span>${text}</span>`;
+    messageEl.innerHTML = `<img src="./images/${icon}.svg" class="icon"><span>${text}</span>`;
   },
   hideMessage = () => {
     const messageEl = document.querySelector(".message");

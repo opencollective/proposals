@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/login/">
   <title>User Profile - Open Collective</title>
   <meta name="description" content="Set up your profile on Open Collective.">
   <meta property="og:title" content="User Profile - Open Collective">
   <meta property="og:description" content="Set up your profile on Open Collective.">
-  <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg">
-  <link rel="preload" href="/fonts/SofiaSans.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" type="text/css" href="/styles/login.css">
+  <link rel="icon" type="image/svg+xml" href="./images/opencollective.svg">
+  <link rel="preload" href="./fonts/SofiaSans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" type="text/css" href="./styles/login.css">
 </head>
 <body>
   <div class="wrapper">
@@ -17,7 +18,7 @@
     <div class="login-card-container">
       <div class="login-card corner-radius-16 overflow-hidden">
         <div class="login-header grid gap-16 px-32 py-24 items-center justify-center text-center">
-          <img src="/images/header-image.webp" alt="Open Letter" class="brand-logo">
+          <img src="./images/user.svg" alt="User" class="brand-logo">
           <h1 class="section-title">Successfully connected</h1>
         </div>
 
@@ -67,7 +68,7 @@
     </footer>
   </div>
 
-  <script src="/scripts/connect-relays.js"></script>
-  <script src="/scripts/user-metadata.js" type="module"></script>
+  <script src="./scripts/connect-relays.js"></script>
+  <script src="./scripts/user-metadata.js" type="module"></script>
 </body>
 </html>
