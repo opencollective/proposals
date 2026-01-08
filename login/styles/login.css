@@ -313,7 +313,7 @@ button:disabled {
 }
 .btn-primary {
   background: var(--color-primary);
-  color: var(--text-neutral-base-static);
+  color: var(--B-W-Alpha-Night-800);
 }
 .btn-secondary {
   background: var(--bg-field-container-hover);
