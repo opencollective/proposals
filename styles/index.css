@@ -13,6 +13,7 @@
   background: var(--bg-action-container-neutral-soft-default);
   border-radius: var(--corner-radius-rounded);
   flex-shrink: 0;
+  object-fit: cover;
 }
 .proposal-btn-lg-container {
   padding: var(--space-lg);
@@ -39,6 +40,7 @@
   width: 32px;
   height: 32px;
   border-radius: var(--corner-radius-rounded);
+  object-fit: cover;
 }
 .proposal-btn-lg-icon {
   width: 30px;
@@ -88,6 +90,7 @@
   border-radius: var(--corner-radius-rounded);
   flex: none;
   overflow: hidden;
+  object-fit: cover;
 }
 .user-name {
   font-weight: 600;

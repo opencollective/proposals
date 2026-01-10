@@ -442,6 +442,7 @@ button:disabled {
   width: var(--text-3xl);
   height: var(--text-3xl);
   border-radius: var(--corner-radius-rounded);
+  object-fit: cover;
 }
 .user-profile-info .profile-name {
   display: none;
@@ -549,6 +550,7 @@ ul li {
   border-radius: var(--corner-radius-6);
   display: block;
   margin: var(--space-2xl) 0;
+  object-fit: cover;
 }
 
 .markdown audio {

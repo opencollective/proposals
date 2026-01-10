@@ -45,6 +45,7 @@
   background: var(--bg-action-container-neutral-soft-default);
   border-radius: var(--corner-radius-rounded);
   flex-shrink: 0;
+  object-fit: cover;
 }
 
 .group-content {
