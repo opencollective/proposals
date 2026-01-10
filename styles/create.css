@@ -1,13 +1,13 @@
 .heading-intro {
-  color: var(--black-color-2)
+  color: var(--text-neutral-base);
 }
 
 .create-form {
   display: grid;
   gap: var(--space-lg);
   padding: var(--space-2lg);
-  background: var(--white-color);
-  border-radius: var(--border-radius);
+  background: var(--bg-base-container-default);
+  border-radius: var(--corner-radius-16);
 }
 
 .create-form:focus-within {
@@ -15,27 +15,37 @@
 }
 
 .create-form label {
-  font-size: var(--text-md);
-  font-weight: 500;
-  color: var(--black-color-2);
+  font-size: var(--action-label);
+  color: var(--text-neutral-base);
+  font-weight: 600;
+  line-height: 100%;
+  text-align: left;
 }
 
-.form-input {
+.create-form input {
   padding: var(--space-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
   font-size: var(--text-md);
-  color: var(--black-color-2);
-  background-color: transparent;
+  color: var(--text-neutral-strong);
+  background: var(--bg-field-container-default);
+  border-radius: var(--corner-radius-6);
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.08) inset;
+}
+
+.create-form input.error {
+  background: var(--error-bg);
+  outline: none;
+  box-shadow: 0 0 1px 2px var(--error-border);
+}
+
+.create-form input:focus {
+  outline: none;
+  box-shadow: 0 0 1px 2px var(--color-primary);
 }
 
 .form-textarea {
   padding: var(--space-md);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--corner-radius-6);
   font-size: var(--text-md);
-  color: var(--black-color-2);
-  background-color: transparent;
   min-height: 250px;
   max-height: 44vh;
   resize: vertical;
@@ -61,17 +71,18 @@ details summary:hover {
   flex-wrap: wrap;
   gap: var(--space-sm);
   padding: var(--space-sm);
-  background-color: var(--white-color-2);
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-action-container-neutral-soft-default);
+  border-radius: var(--corner-radius-6);
+  border: 1px solid var(--stroke-neutral-default-subtle);
 }
 
 .markdown-item {
   font-size: var(--text-xs);
-  color: var(--black-color-4);
-  background-color: var(--white-color);
+  font-weight: 500;
+  color: var(--text-neutral-base-static);
+  background-color: var(--bg-surface-bright);
   padding: var(--space-xxs) var(--space-xs);
-  border-radius: 4px;
+  border-radius: var(--corner-radius-4);
   font-family: monospace;
   white-space: nowrap;
 }
@@ -86,7 +97,6 @@ details summary:hover {
   gap: var(--space-lg);
   padding: var(--space-2xl);
   text-align: center;
-  color: var(--black-color-3);
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border: 2px solid var(--stroke-neutral-default-subtle);
+  border-radius: var(--corner-radius-16);
 }

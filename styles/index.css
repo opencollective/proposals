@@ -1,29 +1,32 @@
 /* Heading part */
 .heading-intro {
-  color: var(--black-color-2)
+  color: var(--text-neutral-base);
 }
 #selected-group {
   padding: 8px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border: 1px solid var(--stroke-neutral-default-subtle);
+  border-radius: var(--corner-radius-6);
 }
 #selected-group img {
   width: clamp(1.563rem, 0.313rem + 3.125vw, 2.813rem);
   height: clamp(1.563rem, 0.313rem + 3.125vw, 2.813rem);
-  border-radius: var(--border-radius);
+  background: var(--bg-action-container-neutral-soft-default);
+  border-radius: var(--corner-radius-rounded);
+  flex-shrink: 0;
 }
 .proposal-btn-lg-container {
   padding: var(--space-lg);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
+  border: 1px solid var(--stroke-neutral-default-subtle);
+  border-radius: var(--corner-radius-16);
 }
 .proposal-btn-lg {
   display: flex;
   align-items: center;
   padding: var(--space-sm);
-  border-radius: 12px;
-  background-color: var(--white-color-2);
-  color: var(--black-color-2);
+  border-radius: var(--corner-radius-10);
+  color: var(--text-neutral-base);
+  background: var(--bg-field-container-hover);
+  border: 1px solid var(--stroke-neutral-default-subtle);
   cursor: pointer;
 }
 .proposal-btn-lg-content {
@@ -35,17 +38,17 @@
 .proposal-btn-lg img {
   width: 32px;
   height: 32px;
-  border-radius: 99px;
+  border-radius: var(--corner-radius-rounded);
 }
 .proposal-btn-lg-icon {
   width: 30px;
   height: 30px;
   font-size: var(--text-3xl);
-  line-height: 70%;
+  line-height: 100%;
   text-align: center;
-  border-radius: 12px;
-  background-color: var(--white-color-3);
-  color: var(--black-color-2);
+  color: var(--text-neutral-strong);
+  background: var(--bg-field-container-hover);
+  border-radius: var(--corner-radius-10);
   flex: none;
 }
 /* -------- */
@@ -54,11 +57,14 @@
   display: flex;
   gap: var(--space-lg);
   padding: var(--space-2lg);
-  color: var(--black-color-2);
-  background-color: var(--white-color);
-  border-radius: var(--border-radius);
+  background: var(--bg-base-container-default);
+  border-radius: var(--corner-radius-16);
   overflow: hidden;
   cursor: pointer;
+}
+.proposal-card.draft-proposal {
+  background: transparent;
+  border: 2px solid var(--stroke-neutral-default-subtle);
 }
 .proposal-card:hover {
   box-shadow: var(--shadow);
@@ -72,20 +78,19 @@
   gap: var(--space-lg);
   padding: var(--space-2xl);
   text-align: center;
-  color: var(--black-color-3);
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border: 2px solid var(--stroke-neutral-default-subtle);
+  border-radius: var(--corner-radius-16);
 }
 .user-image {
   width: clamp(2.188rem, 1.875rem + 0.781vw, 2.5rem) /* 35px to 40px */;
   height: clamp(2.188rem, 1.875rem + 0.781vw, 2.5rem) /* 35px to 40px */;
-  border-radius: 99px;
+  background: var(--bg-action-container-neutral-soft-default);
+  border-radius: var(--corner-radius-rounded);
   flex: none;
   overflow: hidden;
-  background: var(--white-color-2);
 }
 .user-name {
-  font-weight: 500;
+  font-weight: 600;
 }
 .proposal-card-content-container {
   flex-grow: 1;
@@ -96,10 +101,10 @@
 }
 .proposal-card-date {
   font-size: var(--text-sm);
-  color: var(--black-color-4);
+  color: var(--text-neutral-base);
 }
 .proposal-card h3 {
-  color: var(--black-color);
+  color: var(--text-neutral-strong);
 }
 .proposal-card-intro {
   font-size: var(--text-sm);
@@ -135,11 +140,11 @@
   width: var(--text-3xl);
   background-color: var(--white-color-2);
   padding: 4px;
-  border-radius: var(--border-radius);
+  border-radius: var(--corner-radius-6);
 }
 .proposal-order-id {
-  font-weight: 500;
-  color: var(--black-color-4);
+  font-weight: 600;
+  color: var(--text-neutral-base);
 }
 .proposal-card.loader {
   background: transparent;
