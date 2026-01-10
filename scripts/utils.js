@@ -105,30 +105,6 @@ export const formatDate = (t) => {
     };
     return map[trimmed.toLowerCase()] || trimmed;
   },
-  updateCreateButton = () => {
-    const userInfo = getFromLocalStorage("userInfo");
-    if (!userInfo) return;
-
-    const proposalBtn = document.querySelector(".proposal-btn-lg-container");
-    if (!proposalBtn) return;
-
-    proposalBtn.classList.remove("hidden");
-    proposalBtn.setAttribute("data-pubkey", userInfo.pubkey);
-
-    proposalBtn.innerHTML = `
-      <a href="/create" class="proposal-btn-lg">
-        <div class="proposal-btn-lg-content">
-          <img
-            class="user-name" 
-            src="${userInfo.picture || "https://robohash.org/" + userInfo.pubkey + ".png?size=25x25"}"
-            alt="avatar"
-          >
-          <div>Make a new proposal</div>
-        </div>
-        <div class="proposal-btn-lg-icon">+</div>
-      </a>
-    `;
-  },
   setupScrollObserver = (container, selector, callback) => {
     const cards = container?.querySelectorAll(selector);
     if (!cards || cards.length < 10) return;

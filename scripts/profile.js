@@ -3,7 +3,6 @@ import { browse } from "./browse.js";
 import { updateProfile } from "./update-profile.js";
 import {
   getFromLocalStorage,
-  updateCreateButton,
   showSelectedGroup,
 } from "./utils.js";
 
@@ -51,7 +50,6 @@ const updateOwnProfile = () => {
   isOwner = getFromLocalStorage("userInfo")?.pubkey === profilePubkey;
   
   if (isOwner) {
-    updateCreateButton(); // Show create button
     updateProfile(profilePubkey, true); // Enable edit mode
     
     // Reload page if user just logged in to their own profile
