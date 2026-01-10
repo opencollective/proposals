@@ -156,20 +156,30 @@ export const showSelectedGroup = () => {
 
   const name =
       getTag(group.tags, "name") || getTag(group.tags, "d") || "Unnamed group",
-    image = getTag(group.tags, "image");
+    image = getTag(group.tags, "image"),
+    description = getTag(group.tags, "description");
 
   groupEl.classList.remove("hidden");
   groupEl.innerHTML = `
-    <div class="flex items-center justify-between gap-lg">
-      <div class="flex items-center gap-md">
+    <div class="group-header-container grid">
+      <div class="group-header-image-container">
         <img
           src="${image}"
           alt="${name}"
           onerror="this.src='/images/people.svg'"
         >
+        <div class="overlay"></div>
         <div class="group-name">${name}</div>
       </div>
-      <a href="/groups" class="btn btn-sm btn-white-2">Change group</a>
+      <div class="group-header-content flex flex-wrap items-center justify-between gap-lg">
+        <div class="group-description">${description}</div>
+        <div class="group-actions flex items-center gap-lg">
+          <a href="/groups" class="btn btn-sm btn-secondary">Change group</a>
+          <a href="/create" class="btn btn-sm btn-primary">
+            Compose new proposal
+          </a>
+        </div>
+      </div>
     </div>
   `;
 };

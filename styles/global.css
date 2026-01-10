@@ -100,6 +100,8 @@
   --corner-radius-6: 6px;
   --corner-radius-10: 10px;
   --corner-radius-16: 16px;
+  --corner-radius-20: 20px;
+  --corner-radius-24: 24px;
   --corner-radius-rounded: 9999px;
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -320,12 +322,12 @@ button:disabled {
 .btn {
   font-size: var(--text-md);
   padding: var(--space-md) var(--space-xl);
-  border-radius: 10px;
+  border-radius: var(--corner-radius-16);
 }
 .btn-sm {
   font-size: var(--text-sm);
-  padding: var(--space-sm);
-  border-radius: var(--corner-radius-4);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--corner-radius-10);
 }
 .btn:hover, .btn-sm:hover {
   filter: contrast(90%);
