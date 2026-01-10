@@ -435,7 +435,8 @@ button:disabled {
   width: fit-content;
   display: inline-flex;
   gap: var(--space-lg);
-  padding: var(--space-xxs) var(--space-xs) var(--space-xxs);
+  padding: var(--space-xxs);
+  padding-right: var(--space-md);
   border: 1px solid var(--stroke-neutral-default-subtle);
   border-radius: var(--corner-radius-rounded);
   background: var(--bg-surface-base);
