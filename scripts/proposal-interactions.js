@@ -4,6 +4,7 @@ import { attachRelatedKind } from "./attach-related.js";
 import { handleRelated, processRelated } from "./event-handlers.js";
 import { showReactionPicker, getReactionContent } from "./reaction-picker.js";
 import { createReaction, createComment, deleteEvent } from "./nostr-create.js";
+import { fetchProfiles } from "./nostr-fetch.js";
 
 // Setup all user interactions for proposal page (comments, reactions, delete)
 export const setupInteractions = (proposal, userInfo) => {
@@ -28,7 +29,12 @@ export const setupInteractions = (proposal, userInfo) => {
       // Handle regular events (reactions/comments)
       handleRelated(msg, (data) => {
         processRelated(data, containers); // Display in UI
-        updateProfile(data.pubkey, data.pubkey === userInfo?.pubkey); // Update profile
+        if (!window.profileCache.has(data.pubkey)) {
+          window.profileCache.set(data.pubkey, {});
+          fetchProfiles(); // Fetch profile if not cached
+        } else {
+          updateProfile(data.pubkey, data.pubkey === userInfo?.pubkey);
+        }
       });
     },
     // Submit comment with loading state
