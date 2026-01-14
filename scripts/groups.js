@@ -30,7 +30,7 @@ const selectGroup = (uid) => {
       pubkey: groupData.pubkey,
       identifier: dTag
     });
-    targetUrl = `/?group=${naddr}`;
+    targetUrl = `/${naddr}`;
   }
   
   // Update UI to show selected state

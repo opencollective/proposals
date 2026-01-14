@@ -125,7 +125,13 @@ export const formatDate = (t) => {
 // Show selected group in UI
 export const showSelectedGroup = () => {
   const group = getFromLocalStorage("group");
-  if (!group) location.href = "/groups";
+  if (!group) {
+    // Only redirect if we're not on the groups page
+    if (!window.location.pathname.includes('/groups')) {
+      location.href = "/groups";
+    }
+    return;
+  }
 
   const groupEl = document.getElementById("selected-group");
   if (!groupEl || !generateUId(group)) return;

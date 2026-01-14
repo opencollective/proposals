@@ -7,53 +7,52 @@ import {
 import * as NostrTools from "./nostr-tools.bundle.mjs";
 import { fetchGroups } from "./nostr-fetch.js";
 
-// Check for group parameter in URL
-const urlParams = new URLSearchParams(window.location.search);
-const groupParam = urlParams.get("group");
+const path = window.location.pathname.slice(1).split("#")[0],
+  isGroup = path.startsWith("group/"),
+  cleanPath = isGroup ? path.slice(6) : path;
+let groupParam = null;
+
+if (cleanPath.startsWith("naddr")) {
+  groupParam = cleanPath;
+} else if (cleanPath.startsWith("34550")) {
+  const [kind, pubkey, identifier] = decodeURIComponent(cleanPath).split(":");
+  if (pubkey && identifier)
+    groupParam = { kind: parseInt(kind), pubkey, identifier };
+}
 
 if (groupParam) {
   try {
-    const { type, data } = NostrTools.nip19.decode(groupParam);
-    if (type === "naddr" && data.kind === 34550) {
-      const storedGroup = getFromLocalStorage("group");
-      const urlUid = `${data.kind}:${data.pubkey}:${data.identifier}`;
-      const storedUid = generateUId(storedGroup || {});
-      
-      // If URL group matches stored group, just show it
-      if (urlUid === storedUid) {
+    const data =
+      typeof groupParam === "string"
+        ? NostrTools.nip19.decode(groupParam).data
+        : groupParam;
+
+    if (data.kind === 34550) {
+      const stored = getFromLocalStorage("group");
+      const uid = `${data.kind}:${data.pubkey}:${data.identifier}`;
+
+      if (uid === generateUId(stored || {}) && stored) {
         showSelectedGroup();
+        browse().load();
       } else {
-        // Fetch the group from relays
         fetchGroups(
-          { kinds: [34550], authors: [data.pubkey], "#d": [data.identifier] },
+          { authors: [data.pubkey], "#d": [data.identifier] },
           (groupData) => {
             localStorage.setItem("group", JSON.stringify(groupData));
             showSelectedGroup();
           },
           () => {
-            // If fetch fails, redirect to groups page
-            window.location.href = "/groups";
-          }
+            browse().load();
+          },
         );
       }
     } else {
-      // Invalid group parameter, redirect to groups page
-      window.location.href = "/groups";
+      window.location.href = "/";
     }
   } catch (e) {
     console.error("Invalid group parameter", e);
-    window.location.href = "/groups";
   }
 } else {
-  // No group parameter, show selected group if any
   showSelectedGroup();
+  browse().load();
 }
-
-// Get user info from localStorage
-const userInfo = getFromLocalStorage("userInfo");
-
-// Initialize browse functionality and load proposals
-const browser = browse();
-browser.load();
-
-// Flow: Check group param → decode → match or fetch → show group → Check login → update UI → browse.load() → fetch & display proposals
