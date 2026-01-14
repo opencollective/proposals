@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Proposal - Open Collective</title>
+    <meta
+      name="description"
+      content="Create a new proposal for Open Collective. Write, draft or publish your ideas for community governance."
+    />
+    <meta property="og:title" content="Create Proposal - Open Collective" />
+    <meta
+      property="og:description"
+      content="Create a new proposal for Open Collective. Write, draft or publish your ideas for community governance."
+    />
+    <meta property="og:image" content="./images/opencollective.svg" />
+    <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg" />
+    <link rel="stylesheet" type="text/css" href="/styles/global.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/create.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div>
+        <header>
+          <div class="header-navigation py-md">
+            <div class="breadcrumb-nav">
+              <div class="breadcrumb-item back-btn" onclick="history.back()">
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="breadcrumb-item"><a href="/">Home</a></div>
+              <div class="breadcrumb-item separator">/</div>
+              <span class="breadcrumb-item current">Create Proposal</span>
+            </div>
+            
+            <div class="login-content flex gap-lg">
+              <div id="btn-login" class="btn btn-primary">
+                Connect your digital identity
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="container grid gap-lg">
+          <div class="grid gap-2xl py-lg">
+            <div class="grid gap-xs">
+              <h1 class="title">Create a Proposal</h1>
+              <p class="heading-intro">Write and publish your proposal.</p>
+            </div>
+            
+            <form id="create-proposal" class="create-form">
+              <div class="grid gap-sm">
+                <label for="title">Title</label>
+                <input type="text" id="title" class="form-input" placeholder="Title of your proposal" required autofocus/>
+              </div>
+              
+              <div class="grid gap-sm">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-textarea" placeholder="Write your proposal here. **(Markdown supported)**" required></textarea>
+                <details>
+                  <summary>Markdown formatting help</summary>
+                  <div class="markdown-help">
+                    <span class="markdown-item">## Heading 2</span>
+                    <span class="markdown-item">### Heading 3</span>
+                    <span class="markdown-item">#### Heading 4</span>
+                    <span class="markdown-item">##### Heading 5</span>
+                    <span class="markdown-item">###### Heading 6</span>
+                    <span class="markdown-item">**Bold text**</span>
+                    <span class="markdown-item">*Italic text*</span>
+                    <span class="markdown-item">~~Strikethrough~~</span>
+                    <span class="markdown-item">[Link text](url)</span>
+                    <span class="markdown-item">`Inline code`</span>
+                    <span class="markdown-item">```Code block```</span>
+                    <span class="markdown-item">![Image alt](url)</span>
+                    <span class="markdown-item">> Blockquote</span>
+                    <span class="markdown-item">- Unordered list</span>
+                    <span class="markdown-item">1. Ordered list</span>
+                    <span class="markdown-item">---</span>
+                  </div>
+                </details>
+              </div>
+
+              <div class="buttons-container grid gap-md">
+                <button class="btn btn-secondary" type="button" id="draft">Save to Draft</button>
+                <button class="btn btn-primary" type="button" id="publish">Publish Proposal</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <footer class="grid gap-xs text-center justify-center">
+        <div class="footer-heading flex flex-wrap gap-xs items-center justify-center">
+          Brought to you by
+          <svg class="footer-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+            <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+          </svg>
+          Open Collective
+        </div>
+        <div class="footer-text">
+          © <script>document.write(new Date().getFullYear())</script>. Built on an eco-friendly blockchain network.
+        </div>
+      </footer>
+    </div>
+    <script src="/scripts/connect-relays.js"></script>
+    <script src="/login/scripts/login.js" type="module"></script>
+    <script src="/scripts/create-proposal.js" type="module"></script>
+  </body>
+</html>

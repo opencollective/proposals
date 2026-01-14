@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Collective - Proposal</title>
+    <meta
+      name="description"
+      content="View and discuss Open Collective proposals. React, comment and participate."
+    />
+    <meta property="og:title" content="Open Collective - Proposal" />
+    <meta
+      property="og:description"
+      content="View and discuss Open Collective proposals. React, comment and participate."
+    />
+    <meta property="og:image" content="./images/opencollective.svg" />
+    <link rel="icon" type="image/svg+xml" href="/images/opencollective.svg" />
+    <link rel="stylesheet" type="text/css" href="/styles/global.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/proposal.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/reaction-picker.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div>
+        <header class="bg-white">
+          <div class="header-navigation py-md">
+            <div class="breadcrumb-nav">
+              <div class="breadcrumb-item back-btn" onclick="history.back()">
+                <svg class="arrow-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="breadcrumb-item"><a href="/">Home</a></div>
+              <div class="breadcrumb-item separator">/</div>
+              <span class="breadcrumb-item"><a href="/">Proposals</a></span>
+            </div>
+
+            <div class="login-content flex gap-lg">
+              <div id="btn-login" class="btn btn-primary">
+                Connect your digital identity
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="grid gap-xl">
+          <div class="bg-white py-xl">
+            <div class="container">
+              <div id="proposal-preview">
+                <div class="spinner spinner-prosal-loading">
+                  <svg class="spinning-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+                    <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="container flex flex-col gap-3xl">
+
+            <div class="flex flex-col gap-xl reactions-container hidden">
+              <h3 class="title-3">Reactions</h3>
+            </div>
+
+            <div class="flex flex-col gap-xl">
+              <h3 class="title-3">Replies and activity</h3>
+              <div class="comments-container grid gap-lg hidden"></div>
+
+              <!-- Comment Input -->
+              <div class="flex gap-lg comment-inputs-container">
+                <img class="user-image" src="https://robohash.org/default.png?size=40x40" alt="Your avatar">
+                
+                <!-- Sign to comment button when not signed in -->
+                <div class="comment-sign-container">
+                  <div
+                    class="btn btn-primary sign-btn"
+                    onclick="document.getElementById('btn-login').click()"
+                  >
+                    Sign
+                  </div>
+                  <span>to publish a reply</span>
+                </div>
+                
+                <!-- Comment input when signed in -->
+                <div class="comment-input-container grid gap-md hidden">
+                  <textarea 
+                    id="comment-input" 
+                    placeholder="Add a comment..."
+                  ></textarea>
+                  <div class="flex btn-submit-comment-container">
+                    <button class="btn btn-primary" id="btn-submit-comment">Comment</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="grid gap-xs text-center justify-center">
+        <div class="footer-heading flex flex-wrap gap-xs items-center justify-center">
+          Brought to you by
+          <svg class="footer-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path fill="#99cfff" d="M21.86 5.17a11.9 11.9 0 0 1 0 13.66l-3.11-3.11a7.7 7.7 0 0 0 0-7.46l3.11-3.11Z"/>
+            <path fill="#1f87ff" d="m18.83 2.14-3.11 3.11a7.7 7.7 0 1 0 0 13.5l3.11 3.11a12 12 0 1 1 0-19.72"/>
+          </svg>
+          Open Collective
+        </div>
+        <div class="footer-text">
+          © <script>document.write(new Date().getFullYear())</script>. Built on an eco-friendly blockchain network.
+        </div>
+      </footer>
+    </div>
+    <script src="/scripts/connect-relays.js"></script>
+    <script src="/login/scripts/login.js" type="module"></script>
+    <script src="/scripts/proposal.js" type="module"></script>
+  </body>
+</html>

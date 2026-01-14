@@ -1,0 +1,161 @@
+/* Heading part */
+.heading-intro {
+  color: var(--text-neutral-base);
+}
+
+.group-header-container {
+  background: var(--bg-surface-bright);
+  padding: var(--space-xxs);
+  border-radius: var(--corner-radius-24);
+  border: 1px solid var(--stroke-neutral-default-subtle);
+}
+.group-header-image-container {
+  position: relative;
+  max-height: 280px;
+  width: 100%;
+  aspect-ratio: 3/1;
+  overflow: hidden;
+  border-radius: var(--corner-radius-20);
+}
+.group-header-image-container .overlay {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.25) 80%, rgba(0, 0, 0, 0.5) 100%);
+  pointer-events: none;
+}
+.group-header-image-container img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.group-header-image-container .group-name {
+  position: absolute;
+  z-index: 10;
+  left: var(--space-lg);
+  bottom: var(--space-lg);
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  line-height: 100%;
+  color: var(--gray-100);
+}
+.group-header-container .group-header-content {
+  padding: var(--space-lg);
+  font-size: var(--text-lg);
+  color: var(--text-neutral-base);
+}
+/* -------- */
+
+.proposal-card {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-2lg);
+  background: var(--bg-base-container-default);
+  border-radius: var(--corner-radius-16);
+  overflow: hidden;
+  cursor: pointer;
+}
+.proposal-card.draft-proposal {
+  background: transparent;
+  border: 2px solid var(--stroke-neutral-default-subtle);
+}
+.proposal-card:hover {
+  box-shadow: var(--shadow);
+}
+.proposal-card-no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: var(--space-lg);
+  padding: var(--space-2xl);
+  text-align: center;
+  border: 2px solid var(--stroke-neutral-default-subtle);
+  border-radius: var(--corner-radius-16);
+}
+.user-image {
+  width: clamp(2.188rem, 1.875rem + 0.781vw, 2.5rem) /* 35px to 40px */;
+  height: clamp(2.188rem, 1.875rem + 0.781vw, 2.5rem) /* 35px to 40px */;
+  background: var(--bg-action-container-neutral-soft-default);
+  border-radius: var(--corner-radius-rounded);
+  flex: none;
+  overflow: hidden;
+  object-fit: cover;
+}
+.user-name {
+  font-weight: 600;
+}
+.proposal-card-content-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  width: 100%;
+}
+.proposal-card-date {
+  font-size: var(--text-sm);
+  color: var(--text-neutral-base);
+}
+.proposal-card h3 {
+  color: var(--text-neutral-strong);
+}
+.proposal-card-intro {
+  font-size: var(--text-sm);
+}
+.proposal-card h3, .proposal-card-intro  {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  word-break: break-all;
+}
+.reaction-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  user-select: none;
+  cursor: pointer;
+}
+.reaction-item .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--text-xl);
+  height: var(--text-3xl);
+}
+.reaction-item .icon svg {
+  width: var(--text-xl);
+  height: var(--text-xl);
+}
+.reaction-item .icon.active {
+  width: var(--text-3xl);
+  background-color: var(--white-color-2);
+  padding: 4px;
+  border-radius: var(--corner-radius-6);
+}
+.proposal-order-id {
+  font-weight: 600;
+  color: var(--text-neutral-base);
+}
+.proposal-card.loader {
+  background: transparent;
+}
+.proposal-card.loader:hover {
+  box-shadow: none;
+  cursor: default;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
