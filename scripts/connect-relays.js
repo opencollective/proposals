@@ -4,6 +4,7 @@ const primaryRelays = [
   "wss://relay.damus.io",
   "wss://relay.snort.social",
   "wss://relay.primal.net",
+  "wss://relay.chorus.community",
 ];
 
 window.activeRelays = new Set(primaryRelays); // Keep track of active relay connections
