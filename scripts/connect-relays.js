@@ -7,29 +7,28 @@ const primaryRelays = [
   "wss://relay.chorus.community",
 ];
 
-window.activeRelays = new Set(primaryRelays); // Keep track of active relay connections
+window.activeRelays = new Set(); // Keep track of active relay connections
 
-const maxReconnectAttempts = 2,
-  reconnectDelay = 5000,
+const maxReconnectAttempts = 3,
+  reconnectDelay = 3000,
   wsConnections = new Map(),
   connectionAttempts = new Map(),
-  connectionInProgress = new Map(); // Track connection attempt status for each relay
+  connectionInProgress = new Map(),
+  lastResetTime = Date.now(); // Track connection attempt status for each relay
 
 // Clear all WebSocket connections
 const resetConnections = () => {
   wsConnections.forEach((ws) => ws.close());
   wsConnections.clear();
   connectionAttempts.clear();
+  connectionInProgress.clear();
 };
 
 resetConnections();
 
-// Reconnect delay with exponential backoff (max delay = maxReconnectAttempts * reconnectDelay)
+// Reconnect delay with exponential backoff
 const reconnectDelayFunction = (url, attempts) => {
-  const delay = Math.min(
-    reconnectDelay * 2 ** (attempts - 1),
-    maxReconnectAttempts * reconnectDelay
-  );
+  const delay = Math.min(reconnectDelay * attempts, 10000);
   console.log(`Reconnecting to ${url} in ${delay / 1000} seconds...`);
   return new Promise((resolve) => setTimeout(resolve, delay));
 };
@@ -46,13 +45,23 @@ const createWebSocket = async (url) => {
   if (connectionInProgress.get(url)) {
     console.log(`Connection in progress for ${url}. Waiting...`);
     return new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        clearInterval(checkConnection);
+        resolve(null);
+      }, 10000);
       const checkConnection = setInterval(() => {
         const ws = wsConnections.get(url);
         if (ws && ws?.readyState === WebSocket.OPEN) {
           clearInterval(checkConnection);
+          clearTimeout(timeout);
           resolve(ws);
         }
-      }, 100);
+        if (!connectionInProgress.get(url)) {
+          clearInterval(checkConnection);
+          clearTimeout(timeout);
+          resolve(null);
+        }
+      }, 500);
     });
   }
 
@@ -69,61 +78,53 @@ const createWebSocket = async (url) => {
     `Connecting to ${url}, attempt ${attempts + 1}/${maxReconnectAttempts}`
   );
 
-  try {
+  return new Promise((resolve) => {
     const ws = new WebSocket(url);
-    let timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       ws.close();
       console.error(`Connection timeout for ${url}`);
+      connectionInProgress.set(url, false);
+      resolve(null);
     }, 5000);
 
     ws.onopen = () => {
       clearTimeout(timeoutId);
       console.log(`Connected to ${url}`);
       wsConnections.set(url, ws);
-      activeRelays.add(url);
+      window.activeRelays.add(url);
       connectionAttempts.set(url, 0);
       connectionInProgress.set(url, false);
+      resolve(ws);
     };
 
-    ws.onerror = (err) => {
+    ws.onerror = () => {
       clearTimeout(timeoutId);
-      console.error(`WebSocket error on ${url}:`, err);
-      ws.close();
+      console.error(`WebSocket error on ${url}`);
       connectionInProgress.set(url, false);
     };
 
-    ws.onclose = async () => {
+    ws.onclose = () => {
       clearTimeout(timeoutId);
       console.warn(`Connection closed: ${url}`);
       wsConnections.delete(url);
-      activeRelays.delete(url);
+      window.activeRelays.delete(url);
       connectionInProgress.set(url, false);
 
       if (connectionAttempts.get(url) < maxReconnectAttempts) {
-        await reconnectDelayFunction(url, connectionAttempts.get(url));
-        await createWebSocket(url);
+        reconnectDelayFunction(url, connectionAttempts.get(url)).then(() => createWebSocket(url));
       } else {
-        console.error(
-          `Failed to reconnect after ${maxReconnectAttempts} attempts: ${url}`
-        );
+        console.error(`Failed to reconnect after ${maxReconnectAttempts} attempts: ${url}`);
       }
     };
-
-    return ws;
-  } catch (err) {
-    console.error(`Error connecting to ${url}:`, err);
-    connectionInProgress.set(url, false);
-    throw err;
-  }
+  });
 };
 
-// Initialize relay connections
-primaryRelays.forEach(createWebSocket);
+// Initialize relay connections in parallel without blocking
+primaryRelays.forEach((url) => createWebSocket(url).catch(() => null));
 
 // Update relay connections based on primary relays
 const updateRelays = async () => {
   try {
-    // Remove WebSocket connections for relays that are no longer needed
     for (const [url, ws] of wsConnections.entries()) {
       if (!primaryRelays.includes(url)) {
         console.log(`Closing connection to ${url}`);
@@ -140,28 +141,30 @@ const updateRelays = async () => {
     const connectingPromises = primaryRelays
       .filter((url) => !workingConnections.includes(url))
       .map((url) =>
-        createWebSocket(url)
-          .then(() => url)
-          .catch(() => null)
+        Promise.race([
+          createWebSocket(url).then(() => url).catch(() => null),
+          new Promise((resolve) => setTimeout(() => resolve(null), 8000))
+        ])
       );
 
     const newConnections = (await Promise.allSettled(connectingPromises))
       .filter((r) => r.status === "fulfilled" && r.value)
       .map((r) => r.value);
 
-    activeRelays = new Set([
+    window.activeRelays = new Set([
       ...workingConnections,
       ...newConnections.filter(Boolean),
     ]);
 
     if (!activeRelays.size) {
       for (const url of primaryRelays) {
-        try {
-          await createWebSocket(url);
-          activeRelays = new Set([url]);
+        const ws = await Promise.race([
+          createWebSocket(url),
+          new Promise((resolve) => setTimeout(() => resolve(null), 8000))
+        ]);
+        if (ws) {
+          window.activeRelays = new Set([url]);
           break;
-        } catch (err) {
-          console.error(`Failed to connect to primary relay ${url}:`, err);
         }
       }
     }
@@ -172,7 +175,7 @@ const updateRelays = async () => {
 
 updateRelays().catch(console.error);
 
-// Periodic relay maintenance (every 40 seconds)
+// Periodic relay maintenance (every 60 seconds)
 let isUpdating = false;
 setInterval(async () => {
   if (isUpdating) return;
@@ -181,13 +184,20 @@ setInterval(async () => {
     const workingConnections = [...wsConnections.entries()]
       .filter(([, ws]) => ws.readyState === WebSocket.OPEN)
       .map(([url]) => url);
+    
+    // Reset connection attempts every 5 minutes
+    if (Date.now() - lastResetTime > 300000) {
+      connectionAttempts.clear();
+      lastResetTime = Date.now();
+    }
+    
     if (!workingConnections.length) await updateRelays();
-    activeRelays = new Set(workingConnections);
+    window.activeRelays = new Set(workingConnections);
   } catch (err) {
     console.error("Connection maintenance error:", err);
   }
   isUpdating = false;
-}, 40000);
+}, 60000);
 
 // Function for idle timeout
 const handleIdleTimeout = () => {
