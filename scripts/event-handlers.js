@@ -55,10 +55,38 @@ export const handleProfile = (data) => {
       (userInfo.created_at || 0) < created_at
     ) {
       const profileData = JSON.parse(data.content);
+      const bunkerSigner = userInfo.bunkerSigner;
+      const anonymous = userInfo.anonymous;
       localStorage.setItem(
         "userInfo",
-        JSON.stringify({ ...userInfo, ...profileData, created_at }),
+        JSON.stringify({
+          npub: userInfo.npub,
+          pubkey,
+          created_at,
+          ...profileData,
+          ...(bunkerSigner && { bunkerSigner }),
+          ...(anonymous && { anonymous }),
+        }),
       );
+
+      // Check if user has name fields, redirect to user-metadata if not (unless they chose to remain anonymous)
+      if (
+        !profileData.name &&
+        !profileData.displayName &&
+        !profileData.display_name &&
+        !userInfo.anonymous
+      ) {
+        const currentPath = window.location.pathname;
+        if (
+          currentPath !== "/login.html" &&
+          currentPath !== "/login" &&
+          currentPath !== "/login/user-metadata.html" &&
+          currentPath !== "/login/user-metadata"
+        ) {
+          localStorage.setItem("returnUrl", window.location.href);
+          window.location.href = "/login/user-metadata";
+        }
+      }
     }
   }
 };

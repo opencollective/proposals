@@ -111,10 +111,19 @@ export const handleUserEvent = ([type, , event]) => {
     created_at > (userInfo?.created_at || 0)
   ) {
     try {
-      // Parse profile data and merge with existing userInfo
+      // Parse profile data and replace userInfo completely
       const profileData = JSON.parse(content);
-      Object.assign(userInfo, profileData, { created_at });
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      const bunkerSigner = userInfo.bunkerSigner;
+      const anonymous = userInfo.anonymous;
+      const newUserInfo = {
+        npub: userInfo.npub,
+        pubkey,
+        created_at,
+        ...profileData,
+        ...(bunkerSigner && { bunkerSigner }),
+        ...(anonymous && { anonymous }),
+      };
+      localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
 
       // Dispatch event to update UI
       window.dispatchEvent(new CustomEvent("userInfoUpdated"));
@@ -129,10 +138,23 @@ export const handleLogin = async (onSuccess) => {
   if (window.nostr) {
     // Try extension login
     try {
-      await loginWithExtension((data) => {
+      const pubkey = await loginWithExtension((data) => {
         handleUserEvent(data); // Handle profile event
       });
-      onSuccess?.(); // Call success callback
+      
+      // Wait for profile to be fetched and check if user has name
+      setTimeout(() => {
+        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        if (!userInfo?.name && !userInfo?.displayName && !userInfo?.display_name && !userInfo?.anonymous) {
+          const currentPath = window.location.pathname;
+          if (currentPath !== "/login.html" && currentPath !== "/login" && currentPath !== "/login/user-metadata.html" && currentPath !== "/login/user-metadata") {
+            localStorage.setItem("returnUrl", window.location.href);
+          }
+          window.location.href = "/login/user-metadata";
+        } else {
+          onSuccess?.(); // Call success callback
+        }
+      }, 2000);
     } catch (err) {
       // Extension permission denied - offer alternative
       const tryOtherLogin = confirm(
