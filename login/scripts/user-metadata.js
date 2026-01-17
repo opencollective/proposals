@@ -130,6 +130,10 @@ saveBtn.onclick = async (e) => {
       : await signWithBunker(event);
 
     sendMessage(JSON.stringify(["EVENT", signed]), () => {
+      // Update userInfo immediately with the new name
+      const updatedUserInfo = { ...userInfo, name, displayName: name, display_name: name, created_at: timestamp };
+      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+      
       setLoading(saveBtn, false);
       showMessage("Congratulations! Your name has been saved. 👋🏽", "success");
       setTimeout(() => {
