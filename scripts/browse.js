@@ -23,8 +23,15 @@ export const browse = (options = {}) => {
     } = options,
     pathname = window.location.pathname.slice(1),
     isNpubUrl = pathname.startsWith("npub"), // Check if viewing user profile
-    group = getFromLocalStorage("group"),
-    groupUid = group ? generateUId(group) : null; // Filter by group if selected
+    group = getFromLocalStorage("group");
+
+  // Redirect to group selection if no group selected on home page
+  if (!isNpubUrl && pathname === "" && !group) {
+    window.location.href = "/groups";
+    return { load: () => {} };
+  }
+
+  const groupUid = group ? generateUId(group) : null; // Filter by group if selected
 
   // Pagination state
   let oldestTime = null, // Timestamp of oldest proposal for pagination
