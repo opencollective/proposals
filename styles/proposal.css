@@ -108,6 +108,7 @@
   background: var(--bg-field-container-hover);
   border-radius: var(--corner-radius-10);
   font-size: var(--text-sm);
+  color: var(--text-neutral-strong);
   line-height: 1;
   align-items: center;
 }
