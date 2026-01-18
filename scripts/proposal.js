@@ -235,6 +235,7 @@ window.addEventListener("metadataCheckComplete", () => {
 // Check for pending comment on page load (after redirect from user-metadata)
 const userInfo = getFromLocalStorage("userInfo");
 if (userInfo) {
+  setupUserUI();
   const draft = sessionStorage.getItem("commentDraft") || localStorage.getItem("commentDraft");
   if (draft) {
     setTimeout(() => window.submitPendingComment?.(), 500);
