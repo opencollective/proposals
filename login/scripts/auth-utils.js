@@ -152,6 +152,7 @@ export const handleLogin = async (onSuccess) => {
           }
           window.location.href = "/login/user-metadata";
         } else {
+          window.dispatchEvent(new CustomEvent("metadataCheckComplete"));
           onSuccess?.(); // Call success callback
         }
       }, 2000);

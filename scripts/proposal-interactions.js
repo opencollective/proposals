@@ -48,8 +48,12 @@ export const setupInteractions = (proposal, userInfo) => {
         () => {
           query("#comment-input").value = ""; // Clear input
           setButtonLoading(btn, false); // Hide loading
+          window.clearCommentDraft?.(); // Clear draft after successful submission
         },
-        () => setButtonLoading(btn, false), // Hide loading on error
+        () => {
+          setButtonLoading(btn, false); // Hide loading on error
+          window.clearCommentDraft?.(); // Clear draft even on error (e.g., permission denied)
+        },
       );
     },
     // Submit reaction (no loading state needed)

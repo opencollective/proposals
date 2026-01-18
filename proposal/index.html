@@ -71,25 +71,17 @@
               <div class="flex gap-lg comment-inputs-container">
                 <img class="user-image" src="https://robohash.org/default.png?size=40x40" alt="Your avatar">
                 
-                <!-- Sign to comment button when not signed in -->
-                <div class="comment-sign-container">
-                  <div
-                    class="btn btn-primary sign-btn"
-                    onclick="document.getElementById('btn-login').click()"
-                  >
-                    Sign
-                  </div>
-                  <span>to publish a reply</span>
-                </div>
-                
-                <!-- Comment input when signed in -->
-                <div class="comment-input-container grid gap-md hidden">
+                <!-- Comment input -->
+                <div class="comment-input-container grid gap-md">
                   <textarea 
                     id="comment-input" 
                     placeholder="Add a comment..."
                   ></textarea>
                   <div class="flex btn-submit-comment-container">
-                    <button class="btn btn-primary" id="btn-submit-comment">Comment</button>
+                    <!-- When not signed in -->
+                    <div class="btn btn-primary sign-btn">Sign</div>
+                    <!-- When signed in -->
+                    <button class="btn btn-primary hidden" id="btn-submit-comment">Comment</button>
                   </div>
                 </div>
               </div>

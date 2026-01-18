@@ -136,6 +136,10 @@ saveBtn.onclick = async (e) => {
       
       setLoading(saveBtn, false);
       showMessage("Congratulations! Your name has been saved. 👋🏽", "success");
+      
+      // Dispatch metadata check complete event
+      window.dispatchEvent(new CustomEvent("metadataCheckComplete"));
+      
       setTimeout(() => {
         const returnUrl = localStorage.getItem("returnUrl");
         localStorage.removeItem("returnUrl");
@@ -172,6 +176,9 @@ skipBtn.onclick = () => {
   if (currentUserInfo) {
     localStorage.setItem("userInfo", JSON.stringify({ ...currentUserInfo, anonymous: true }));
   }
+  
+  // Dispatch metadata check complete event
+  window.dispatchEvent(new CustomEvent("metadataCheckComplete"));
   
   const returnUrl = localStorage.getItem("returnUrl");
   localStorage.removeItem("returnUrl");

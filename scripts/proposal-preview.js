@@ -135,7 +135,7 @@ export const renderProposalPreview = (proposal, container) => {
         wrapper.insertAdjacentHTML(
           "afterbegin",
           `
-        <a href="/${naddr}" id="group-pill">
+        <a href="/${naddr}" id="group-pill" title="Community group">
           <img src="${image}" alt="${name}" onerror="this.src='/images/people.svg'">
           <span>${name}</span>
         </a>
