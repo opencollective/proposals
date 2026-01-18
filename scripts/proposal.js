@@ -238,7 +238,7 @@ if (userInfo) {
   setupUserUI();
   const draft = sessionStorage.getItem("commentDraft") || localStorage.getItem("commentDraft");
   if (draft) {
-    setTimeout(() => window.submitPendingComment?.(), 500);
+    setTimeout(() => window.submitPendingComment?.(), 2000);
   }
 }
 
