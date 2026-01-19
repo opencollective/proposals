@@ -26,9 +26,11 @@
 
   --corner-radius-6: 6px;
   --corner-radius-10: 10px;
+  --corner-radius-12: 12px;
   --corner-radius-16: 16px;
 
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-2: 0 4px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   --color-primary: #4F46E5;
@@ -111,6 +113,8 @@
     --error-border: var(--Rose-Alpha-Night-600);
     --error-message: var(--Rose-filled-300);
     --success-message: var(--Green-filled-300);
+
+    --shadow-2: 0 4px 8px rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -490,4 +494,32 @@ button:disabled {
 }
 .footer-text {
   color: var(--text-neutral-subtle);
+}
+
+.tooltip-trigger {
+  position: relative;
+  cursor: help;
+}
+.tooltip-trigger .tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-surface-base);
+  box-shadow: var(--shadow-2);
+  color: white;
+  padding: var(--spacing-8) var(--spacing-12);
+  border-radius: var(--corner-radius-12);
+  width: max-content;
+  max-width: 300px;
+  z-index: 10;
+}
+.tooltip-trigger:hover .tooltip {
+  visibility: visible;
+}
+@media (prefers-color-scheme: dark) {
+  .tooltip-trigger svg {
+    filter: invert(1);
+  }
 }
