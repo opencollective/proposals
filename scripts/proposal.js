@@ -36,8 +36,8 @@ const setupCommentInput = () => {
   const userInfo = getFromLocalStorage("userInfo");
   if (!userInfo) return; // Not logged in
 
-  // Toggle visibility: hide sign-in prompt, show comment input
-  [query(".comment-sign-container"), query(".comment-input-container")].forEach(
+  // Toggle visibility: hide sign-in prompt, show comment sunbmit/sign button
+  [query(".sign-btn"), query("#btn-submit-comment")].forEach(
     (el) => el?.classList.toggle("hidden"),
   );
 
@@ -46,6 +46,40 @@ const setupCommentInput = () => {
     img = container?.querySelector("img");
   if (container) container.setAttribute("data-pubkey", userInfo.pubkey);
   if (img && userInfo.picture) img.src = userInfo.picture;
+  
+  // Restore draft comment
+  const draft = sessionStorage.getItem("commentDraft") || localStorage.getItem("commentDraft");
+  if (draft) {
+    const input = id("comment-input");
+    if (input) input.value = draft;
+  }
+};
+
+// Submit pending comment after metadata check completes
+window.submitPendingComment = () => {
+  const draft = sessionStorage.getItem("commentDraft") || localStorage.getItem("commentDraft");
+  if (!draft) return;
+  
+  const userInfo = getFromLocalStorage("userInfo");
+  if (!userInfo) return;
+  
+  const hasName = !!(userInfo.displayName || userInfo.display_name || userInfo.name);
+  if (hasName || userInfo.anonymous) {
+    setTimeout(() => {
+      id("btn-submit-comment")?.click();
+      // Clear input field after submission
+      setTimeout(() => {
+        const input = id("comment-input");
+        if (input) input.value = "";
+      }, 100);
+    }, 100);
+  }
+};
+
+// Clear comment draft after successful submission
+window.clearCommentDraft = () => {
+  sessionStorage.removeItem("commentDraft");
+  localStorage.removeItem("commentDraft");
 };
 
 // Show edit/delete buttons if user owns the proposal
@@ -192,6 +226,31 @@ const loadProposal = () => {
 
 // Listen for login/logout events to update UI
 window.addEventListener("userInfoUpdated", setupUserUI);
+
+// Listen for metadata check completion to submit pending comment
+window.addEventListener("metadataCheckComplete", () => {
+  window.submitPendingComment?.();
+});
+
+// Check for pending comment on page load (after redirect from user-metadata)
+const userInfo = getFromLocalStorage("userInfo");
+if (userInfo) {
+  setupUserUI();
+  const draft = sessionStorage.getItem("commentDraft") || localStorage.getItem("commentDraft");
+  if (draft) {
+    setTimeout(() => window.submitPendingComment?.(), 2000);
+  }
+}
+
+// Setup sign button click handler
+query(".sign-btn")?.addEventListener("click", () => {
+  const input = id("comment-input");
+  if (input?.value) {
+    sessionStorage.setItem("commentDraft", input.value);
+    localStorage.setItem("commentDraft", input.value);
+  }
+  id("btn-login")?.click();
+});
 
 // Start loading proposal on page load
 loadProposal();

@@ -129,14 +129,16 @@ export const renderProposalPreview = (proposal, container) => {
         if (!wrapper) return;
 
         // Add group pill to date info
-        const { name, image } = e.detail;
+        const { name, image } = e.detail,
+          [kind, author, d] = aTag.split(":"),
+          naddr = NostrTools.nip19.naddrEncode({ kind: +kind, pubkey: author, identifier: d });
         wrapper.insertAdjacentHTML(
           "afterbegin",
           `
-        <span id="group-pill">
+        <a href="/${naddr}" id="group-pill" title="Community group">
           <img src="${image}" alt="${name}" onerror="this.src='/images/people.svg'">
           <span>${name}</span>
-        </span>
+        </a>
         <span class="seperator-dot">●</span>
       `,
         );

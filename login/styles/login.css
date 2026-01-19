@@ -26,9 +26,11 @@
 
   --corner-radius-6: 6px;
   --corner-radius-10: 10px;
+  --corner-radius-12: 12px;
   --corner-radius-16: 16px;
 
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-2: 0 4px 8px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   --color-primary: #4F46E5;
@@ -71,7 +73,8 @@
   --text-neutral-subtle: var(--B-W-Alpha-Day-600);
   --text-status-info: var(--blue-filled-800);
   
-  --bg-color: rgba(255,255,255,0.85);
+  --bg-gradient: linear-gradient(90deg,rgba(79, 70, 229, 0.75) 0%, rgba(255, 59, 174, 0.6) 50%, rgba(79, 70, 229, 0.75) 100%);
+  --bg-color: rgba(255,255,255,0.80);
   --bg-surface-base: var(--gray-100);
   --bg-field-container-hover: var(--B-W-Alpha-Day-50);
   --bg-field-container-default: var(--B-W-Alpha-Day-25);
@@ -96,6 +99,7 @@
     --text-neutral-subtle: var(--B-W-Alpha-Night-600);
     --text-status-info: var(--blue-filled-300);
     
+    --bg-gradient: transparent;
     --bg-color: rgba(0,0,0,0.45);
     --bg-surface-base: var(--gray-900);
     --bg-field-container-hover: var(--B-W-Alpha-Night-100);
@@ -109,6 +113,8 @@
     --error-border: var(--Rose-Alpha-Night-600);
     --error-message: var(--Rose-filled-300);
     --success-message: var(--Green-filled-300);
+
+    --shadow-2: 0 4px 8px rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -122,15 +128,22 @@
   font-family: 'Sofia Sans', sans-serif;
 }
 html {
+  background: var(--bg-gradient);
   background-color: var(--bg-color);
   scroll-behavior: smooth;
 }
 body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0 auto;
   font-family: 'Sofia Sans', sans-serif;
   background: url(/images/bg-image.webp);
   background-color: var(--bg-color);
   background-blend-mode: overlay;
   color: var(--text-neutral-strong);
+  overflow-x: hidden;
 }
 
 .section-title {
@@ -481,4 +494,32 @@ button:disabled {
 }
 .footer-text {
   color: var(--text-neutral-subtle);
+}
+
+.tooltip-trigger {
+  position: relative;
+  cursor: help;
+}
+.tooltip-trigger .tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-surface-base);
+  box-shadow: var(--shadow-2);
+  color: white;
+  padding: var(--spacing-8) var(--spacing-12);
+  border-radius: var(--corner-radius-12);
+  width: max-content;
+  max-width: 300px;
+  z-index: 10;
+}
+.tooltip-trigger:hover .tooltip {
+  visibility: visible;
+}
+@media (prefers-color-scheme: dark) {
+  .tooltip-trigger svg {
+    filter: invert(1);
+  }
 }

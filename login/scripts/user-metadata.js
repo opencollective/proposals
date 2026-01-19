@@ -4,11 +4,26 @@ import * as NostrTools from "./nostr-tools.bundle.mjs";
 const getFromLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || null,
   userInfo = getFromLocalStorage("userInfo");
 
-// Check if user already has a name, redirect if they do
-if (userInfo?.name || userInfo?.displayName || userInfo?.display_name) {
-  const returnUrl = localStorage.getItem("returnUrl") || "/";
+// Save referrer on page load if not already saved
+if (!localStorage.getItem("returnUrl") && document.referrer) {
+  const referrerUrl = new URL(document.referrer);
+  if (referrerUrl.hostname === window.location.hostname && !referrerUrl.pathname.includes("login")) {
+    localStorage.setItem("returnUrl", document.referrer);
+  }
+}
+
+// Check if user already has a name or chose to remain anonymous, redirect if they do
+if (userInfo?.name || userInfo?.displayName || userInfo?.display_name || userInfo?.anonymous) {
+  const returnUrl = localStorage.getItem("returnUrl");
   localStorage.removeItem("returnUrl");
-  window.location.href = returnUrl;
+  
+  if (returnUrl && new URL(returnUrl, window.location.origin).hostname === window.location.hostname) {
+    window.location.href = returnUrl;
+  } else if (document.referrer && new URL(document.referrer).hostname === window.location.hostname) {
+    window.history.back();
+  } else {
+    window.location.href = "/";
+  }
 }
 
 const id = document.getElementById.bind(document);
@@ -115,12 +130,36 @@ saveBtn.onclick = async (e) => {
       : await signWithBunker(event);
 
     sendMessage(JSON.stringify(["EVENT", signed]), () => {
+      // Update userInfo immediately with the new name
+      const updatedUserInfo = { ...userInfo, name, displayName: name, display_name: name, created_at: timestamp };
+      localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+      
       setLoading(saveBtn, false);
       showMessage("Congratulations! Your name has been saved. 👋🏽", "success");
+      
+      // Dispatch metadata check complete event
+      window.dispatchEvent(new CustomEvent("metadataCheckComplete"));
+      
       setTimeout(() => {
-        const returnUrl = localStorage.getItem("returnUrl") || "/";
+        const returnUrl = localStorage.getItem("returnUrl");
         localStorage.removeItem("returnUrl");
-        window.location.href = returnUrl;
+        
+        if (returnUrl && new URL(returnUrl, window.location.origin).hostname === window.location.hostname) {
+          window.location.href = returnUrl;
+        } else if (document.referrer) {
+          const referrerUrl = new URL(document.referrer);
+          if (referrerUrl.hostname === window.location.hostname) {
+            if (referrerUrl.pathname === "/login" || referrerUrl.pathname === "/login.html") {
+              window.location.href = "/";
+            } else {
+              window.history.back();
+            }
+          } else {
+            window.location.href = "/";
+          }
+        } else {
+          window.location.href = "/";
+        }
       }, 2000);
     });
   } catch (err) {
@@ -132,7 +171,32 @@ saveBtn.onclick = async (e) => {
 
 // Skip button handler
 skipBtn.onclick = () => {
-  const returnUrl = localStorage.getItem("returnUrl") || "/";
+  // Mark user as choosing to remain anonymous
+  const currentUserInfo = getFromLocalStorage("userInfo");
+  if (currentUserInfo) {
+    localStorage.setItem("userInfo", JSON.stringify({ ...currentUserInfo, anonymous: true }));
+  }
+  
+  // Dispatch metadata check complete event
+  window.dispatchEvent(new CustomEvent("metadataCheckComplete"));
+  
+  const returnUrl = localStorage.getItem("returnUrl");
   localStorage.removeItem("returnUrl");
-  window.location.href = returnUrl;
+  
+  if (returnUrl && new URL(returnUrl, window.location.origin).hostname === window.location.hostname) {
+    window.location.href = returnUrl;
+  } else if (document.referrer) {
+    const referrerUrl = new URL(document.referrer);
+    if (referrerUrl.hostname === window.location.hostname) {
+      if (referrerUrl.pathname === "/login" || referrerUrl.pathname === "/login.html") {
+        window.location.href = "/";
+      } else {
+        window.history.back();
+      }
+    } else {
+      window.location.href = "/";
+    }
+  } else {
+    window.location.href = "/";
+  }
 };
